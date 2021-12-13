@@ -1,0 +1,19 @@
+{
+    "name": "chance/log",
+    "description": "Elegant logging of operations",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Chance\\Log\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "chance",
+            "email": "ctx_ya@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
