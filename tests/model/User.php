@@ -13,6 +13,6 @@ class User extends Base
 
     public function getSexTextAttribute($key): string
     {
-        return ['女','男'][($key ?? $this->SEX)] ?? '未知';
+        return ['女','男'][($key ?? $this->sex)] ?? '未知';
     }
 }
