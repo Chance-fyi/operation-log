@@ -22,4 +22,11 @@ class OperationLog
         self::$message = '';
         return $message;
     }
+
+    public static function clear()
+    {
+        self::$tableComment = [];
+        self::$columnComment = [];
+        self::$message = '';
+    }
 }

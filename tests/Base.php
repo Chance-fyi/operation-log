@@ -11,18 +11,20 @@ use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Events\Dispatcher;
 use PHPUnit\Framework\TestCase;
+use think\facade\Db;
 
 class Base extends TestCase
 {
     public function __construct(string $name)
     {
         parent::__construct($name);
-        $this->connection();
+        $this->connectionI();
+        $this->connectionT();
         $this->createTable();
     }
 
-    // 连接数据库
-    protected function connection()
+    // 连接数据库 illuminate orm
+    protected function connectionI()
     {
         $capsule = new Manager();
         $capsule->addConnection([
@@ -41,6 +43,25 @@ class Base extends TestCase
         $capsule->setAsGlobal();
         // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
         $capsule->bootEloquent();
+    }
+
+    // 连接数据库 think orm
+    protected function connectionT()
+    {
+        Db::setConfig([
+            'connections' => [
+                'mysql' => [
+                'type' => 'mysql',
+                'hostname' => 'mysql',
+                'database' => 'test',
+                'username' => 'root',
+                'password' => 'root',
+                'charset' => 'utf8',
+                'collation' => 'utf8_unicode_ci',
+                'prefix' => 'tb_',
+                ]
+            ]
+        ]);
     }
 
     // 创建表

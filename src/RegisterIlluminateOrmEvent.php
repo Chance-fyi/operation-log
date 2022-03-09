@@ -15,15 +15,15 @@ trait RegisterIlluminateOrmEvent
     protected static function booted()
     {
         static::created(function ($model){
-            IlluminateOrm::created($model);
+            IlluminateOrmLog::created($model);
         });
 
         static::updated(function ($model){
-            IlluminateOrm::updated($model);
+            IlluminateOrmLog::updated($model);
         });
 
         static::deleted(function ($model){
-            IlluminateOrm::deleted($model);
+            IlluminateOrmLog::deleted($model);
         });
     }
 }
