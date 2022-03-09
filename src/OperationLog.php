@@ -30,14 +30,14 @@ class OperationLog
     {
         $logKey = $model->logKey;
         $message = '修改了 ' . self::getTableComments($model)
-            . '(' . (self::getColumnComment($model, $logKey) ?: $logKey) . ":{$model->$logKey})：";
+            . '(' . self::getColumnComment($model, $logKey) . ":{$model->$logKey})：";
         foreach ($model->getAttributes() as $key => $value) {
             if ($model->isClean($key)) {
                 continue;
             }
             $keyText = $key . '_text';
             $attributeFun = 'get' . Str::studly(Str::lower($keyText)) . 'Attribute';
-            $message .= (self::getColumnComment($model, $key) ?: $key)
+            $message .= self::getColumnComment($model, $key)
                 . "由：" . (method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOriginal($key)) : $model->getOriginal($key)) . ' '
                 . "改为：" . ($model->$keyText ?? $value) . ' ';
         }
@@ -54,13 +54,13 @@ class OperationLog
     {
         $logKey = $model->logKey;
         $message = $message . '了 ' . self::getTableComments($model)
-            . '(' . (self::getColumnComment($model, $logKey) ?: $logKey) . ":{$model->$logKey})：";
+            . '(' . self::getColumnComment($model, $logKey) . ":{$model->$logKey})：";
         foreach ($model->getAttributes() as $key => $value) {
             if ($logKey === $key) {
                 continue;
             }
             $keyText = $key . '_text';
-            $message .= (self::getColumnComment($model, $key) ?: $key)
+            $message .= self::getColumnComment($model, $key)
                 . "：" . ($model->$keyText ?? $value) . ' ';
         }
         return $message . PHP_EOL;
@@ -76,16 +76,17 @@ class OperationLog
     {
         $dbName = $model->getConnection()->getDatabaseName();
         $table = $model->getConnection()->getTablePrefix() . $model->getTable();
+        $comment = "";
 
         if (empty(self::$tableComment[$dbName])) {
             self::$tableComment[$dbName] = Manager::select("SELECT TABLE_NAME, TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{$dbName}'");
         }
         foreach (self::$tableComment[$dbName] as $item) {
             if ($item->TABLE_NAME == $table) {
-                return $item->TABLE_COMMENT;
+                $comment = $item->TABLE_COMMENT;
             }
         }
-        return '';
+        return $comment ?: $table;
     }
 
     /**
@@ -99,16 +100,17 @@ class OperationLog
     {
         $dbName = $model->getConnection()->getDatabaseName();
         $table = $model->getConnection()->getTablePrefix() . $model->getTable();
+        $comment = "";
 
         if (empty(self::$columnComment[$dbName])) {
             self::$columnComment[$dbName] = Manager::select("SELECT TABLE_NAME,COLUMN_NAME,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '{$dbName}'");
         }
         foreach (self::$columnComment[$dbName] as $item) {
             if ($item->TABLE_NAME == $table && $item->COLUMN_NAME == $field) {
-                return $item->COLUMN_COMMENT;
+                $comment = $item->COLUMN_COMMENT;
             }
         }
-        return '';
+        return $comment ?: $field;
     }
 
     public static function getMessage(): string
