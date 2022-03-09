@@ -1,13 +1,13 @@
 <?php
 /**
  * Created by PhpStorm
- * User Chance
+ * IUser Chance
  * Date 2021/12/31 11:08
  */
 
 namespace Chance\Log;
 
-trait RegistrationEvent
+trait RegisterIlluminateOrmEvent
 {
     // 日志记录的主键名称
     public string $logKey = 'id';
@@ -15,15 +15,15 @@ trait RegistrationEvent
     protected static function booted()
     {
         static::created(function ($model){
-            OperationLog::created($model);
+            IlluminateOrm::created($model);
         });
 
         static::updated(function ($model){
-            OperationLog::updated($model);
+            IlluminateOrm::updated($model);
         });
 
         static::deleted(function ($model){
-            OperationLog::deleted($model);
+            IlluminateOrm::deleted($model);
         });
     }
 }

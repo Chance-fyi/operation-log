@@ -1,20 +1,20 @@
 <?php
 /**
  * Created by PhpStorm
- * User Chance
+ * IUser Chance
  * Date 2021/12/31 16:50
  */
 
 namespace Chance\Log\Test;
 
 use Chance\Log\OperationLog;
-use Chance\Log\Test\model\User;
+use Chance\Log\Test\model\IUser;
 
-class LogTest extends BaseTest
+class ILogTest extends Base
 {
     public function testCreate()
     {
-        $user = new User();
+        $user = new IUser();
         $user->name = 'Create';
         $user->sex = 1;
         $user->save();
@@ -28,7 +28,7 @@ class LogTest extends BaseTest
      */
     public function testUpdate($id)
     {
-        $user = User::find($id);
+        $user = IUser::find($id);
         $user->name = 'Update';
         $user->sex = 0;
         $user->save();
@@ -41,7 +41,7 @@ class LogTest extends BaseTest
      */
     public function testDelete($id)
     {
-        User::destroy($id);
+        IUser::destroy($id);
         $this->assertEquals("删除了 用户(id:{$id})：姓名：Update 性别：女 " . PHP_EOL, OperationLog::getMessage());
     }
 }

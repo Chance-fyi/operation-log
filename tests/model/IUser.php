@@ -1,13 +1,13 @@
 <?php
 /**
  * Created by PhpStorm
- * User Chance
+ * IUser Chance
  * Date 2021/12/31 11:12
  */
 
 namespace Chance\Log\Test\model;
 
-class User extends Base
+class IUser extends IBase
 {
     protected $table = 'user';
 

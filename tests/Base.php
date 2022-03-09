@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * User Chance
+ * IUser Chance
  * Date 2021/12/31 16:40
  */
 
@@ -12,7 +12,7 @@ use Illuminate\Database\Capsule\Manager;
 use Illuminate\Events\Dispatcher;
 use PHPUnit\Framework\TestCase;
 
-class BaseTest extends TestCase
+class Base extends TestCase
 {
     public function __construct(string $name)
     {

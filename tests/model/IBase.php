@@ -1,18 +1,18 @@
 <?php
 /**
  * Created by PhpStorm
- * User Chance
+ * IUser Chance
  * Date 2021/12/31 11:10
  */
 
 namespace Chance\Log\Test\model;
 
-use Chance\Log\RegistrationEvent;
+use Chance\Log\RegisterIlluminateOrmEvent;
 use Illuminate\Database\Eloquent\Model;
 
-class Base extends Model
+class IBase extends Model
 {
-    use RegistrationEvent;
+    use RegisterIlluminateOrmEvent;
 
     public $timestamps = false;
 }
