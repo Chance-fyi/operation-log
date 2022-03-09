@@ -1,5 +1,5 @@
 {
-    "name": "chance/log",
+    "name": "chance-fyi/operation-log",
     "description": "Elegant logging of operations",
     "type": "library",
     "license": "MIT",
