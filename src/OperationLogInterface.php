@@ -18,5 +18,5 @@ interface OperationLogInterface
 
     public static function getColumnComment($model, $field);
 
-    public static function getMessage();
+    public static function getLog();
 }

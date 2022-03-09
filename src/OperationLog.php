@@ -14,12 +14,12 @@ class OperationLog
     protected static array $columnComment;
 
     // 日志
-    protected static string $message = '';
+    protected static string $log = '';
 
-    public static function getMessage(): string
+    public static function getLog(): string
     {
-        $message = self::$message;
-        self::$message = '';
+        $message = self::$log;
+        self::$log = '';
         return $message;
     }
 
@@ -27,6 +27,6 @@ class OperationLog
     {
         self::$tableComment = [];
         self::$columnComment = [];
-        self::$message = '';
+        self::$log = '';
     }
 }

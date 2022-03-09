@@ -15,7 +15,7 @@ class IlluminateOrmLog extends OperationLog implements OperationLogInterface
 {
     public static function created($model)
     {
-        self::$message .= self::createOrDelete($model, '添加');
+        self::$log .= self::createOrDelete($model, '添加');
     }
 
     public static function updated($model)
@@ -34,12 +34,12 @@ class IlluminateOrmLog extends OperationLog implements OperationLogInterface
                 . "改为：" . ($model->$keyText ?? $value) . ' ';
         }
 
-        self::$message .= $message . PHP_EOL;
+        self::$log .= $message . PHP_EOL;
     }
 
     public static function deleted($model)
     {
-        self::$message .= self::createOrDelete($model, '删除');
+        self::$log .= self::createOrDelete($model, '删除');
     }
 
     protected static function createOrDelete(Model $model, $message): string

@@ -20,7 +20,7 @@ class LogTest extends Base
         $user->sex = 1;
         $user->save();
         $id = $user->id;
-        $this->assertEquals("添加了 用户(id:{$id})：姓名：Create 性别：男 " . PHP_EOL, OperationLog::getMessage());
+        $this->assertEquals("添加了 用户(id:{$id})：姓名：Create 性别：男 " . PHP_EOL, OperationLog::getLog());
         return $id;
     }
 
@@ -33,7 +33,7 @@ class LogTest extends Base
         $user->name = 'Update';
         $user->sex = 0;
         $user->save();
-        $this->assertEquals("修改了 用户(id:{$id})：姓名由：Create 改为：Update 性别由：男 改为：女 " . PHP_EOL, OperationLog::getMessage());
+        $this->assertEquals("修改了 用户(id:{$id})：姓名由：Create 改为：Update 性别由：男 改为：女 " . PHP_EOL, OperationLog::getLog());
         return $id;
     }
 
@@ -43,7 +43,7 @@ class LogTest extends Base
     public function testDeleteI($id)
     {
         IUser::destroy($id);
-        $this->assertEquals("删除了 用户(id:{$id})：姓名：Update 性别：女 " . PHP_EOL, OperationLog::getMessage());
+        $this->assertEquals("删除了 用户(id:{$id})：姓名：Update 性别：女 " . PHP_EOL, OperationLog::getLog());
         OperationLog::clear();
     }
 
@@ -54,7 +54,7 @@ class LogTest extends Base
         $user->sex = 1;
         $user->save();
         $id = $user->id;
-        $this->assertEquals("添加了 用户(id:{$id})：姓名：Create 性别：男 " . PHP_EOL, OperationLog::getMessage());
+        $this->assertEquals("添加了 用户(id:{$id})：姓名：Create 性别：男 " . PHP_EOL, OperationLog::getLog());
         return $id;
     }
 
@@ -67,7 +67,7 @@ class LogTest extends Base
         $user->name = 'Update';
         $user->sex = 0;
         $user->save();
-        $this->assertEquals("修改了 用户(id:{$id})：姓名由：Create 改为：Update 性别由：男 改为：女 " . PHP_EOL, OperationLog::getMessage());
+        $this->assertEquals("修改了 用户(id:{$id})：姓名由：Create 改为：Update 性别由：男 改为：女 " . PHP_EOL, OperationLog::getLog());
         return $id;
     }
 
@@ -77,6 +77,6 @@ class LogTest extends Base
     public function testDeleteT($id)
     {
         TUser::destroy($id);
-        $this->assertEquals("删除了 用户(id:{$id})：姓名：Update 性别：女 " . PHP_EOL, OperationLog::getMessage());
+        $this->assertEquals("删除了 用户(id:{$id})：姓名：Update 性别：女 " . PHP_EOL, OperationLog::getLog());
     }
 }
