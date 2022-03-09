@@ -17,9 +17,7 @@
     ],
     "minimum-stability": "dev",
     "require-dev": {
-        "phpunit/phpunit": "10.0.x-dev"
-    },
-    "require": {
+        "phpunit/phpunit": "10.0.x-dev",
         "illuminate/database": "^8.0",
         "illuminate/events": "^8.0",
         "topthink/think-orm": "2.0.x-dev"
