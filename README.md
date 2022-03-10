@@ -66,6 +66,8 @@ class User extends BaseModel
 
 ![image-20220309172842186](https://image.chance.fyi/image-20220309172842186.png)
 
+也可以在模型中通知`$tableComment`与`$columnComment`设置表注释与字段注释。
+
 **获取器**
 
 设置一个名为`字段名_text`的获取器。
@@ -79,14 +81,21 @@ class User extends BaseModel
 {
     // 日志记录的主键名称
     public string $logKey = 'id';
+    // 表注释
+    public $tableComment = "用户";
+    // 字段注释
+    public $columnComment = [
+        'name' => '姓名',
+        'sex' => '性别',
+    ];
     
-    // Laravel Orm 获取器设置方法
+    // Laravel ORM 获取器设置方法
     public function getSexTextAttribute($key): string
     {
         return ['女','男'][($key ?? $this->sex)] ?? '未知';
     }
     
-    // ThinkPHP Orm 获取器设置方法
+    // ThinkPHP ORM 获取器设置方法
     public function getSexTextAttr($key): string
     {
         return ['女','男'][($key ?? $this->sex)] ?? '未知';

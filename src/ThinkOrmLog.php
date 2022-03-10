@@ -21,7 +21,7 @@ class ThinkOrmLog extends OperationLog implements OperationLogInterface
     public static function updated($model)
     {
         $logKey = $model->logKey;
-        $message = '修改了 ' . self::getTableComments($model)
+        $message = '修改了 ' . self::getTableComment($model)
             . '(' . self::getColumnComment($model, $logKey) . ":{$model->$logKey})：";
 
         foreach ($model->getChangedData() as $key => $value) {
@@ -43,7 +43,7 @@ class ThinkOrmLog extends OperationLog implements OperationLogInterface
     protected static function createOrDelete(Model $model, $message): string
     {
         $logKey = $model->logKey;
-        $message = $message . '了 ' . self::getTableComments($model)
+        $message = $message . '了 ' . self::getTableComment($model)
             . '(' . self::getColumnComment($model, $logKey) . ":{$model->$logKey})：";
 
         foreach ($model->toArray() as $key => $value) {
@@ -63,10 +63,14 @@ class ThinkOrmLog extends OperationLog implements OperationLogInterface
      * @param Model $model
      * @return string
      */
-    public static function getTableComments( $model): string
+    public static function getTableComment($model): string
     {
-        $dbName = $model->getConfig('database');
         $table = $model->getTable();
+        if (isset($model->tableComment)){
+            return $model->tableComment ?: $table;
+        }
+
+        $dbName = $model->getConfig('database');
         $comment = "";
 
         if (empty(self::$tableComment[$dbName])) {
@@ -90,6 +94,10 @@ class ThinkOrmLog extends OperationLog implements OperationLogInterface
      */
     public static function getColumnComment($model, $field): string
     {
+        if (isset($model->columnComment)){
+            return $model->columnComment[$field] ?? $field;
+        }
+
         $dbName = $model->getConfig('database');
         $table = $model->getTable();
         $comment = "";

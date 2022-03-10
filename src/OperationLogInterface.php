@@ -14,7 +14,7 @@ interface OperationLogInterface
 
     public static function deleted($model);
 
-    public static function getTableComments($model);
+    public static function getTableComment($model);
 
     public static function getColumnComment($model, $field);
 

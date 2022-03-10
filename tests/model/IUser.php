@@ -10,6 +10,11 @@ namespace Chance\Log\Test\model;
 class IUser extends IBase
 {
     protected $table = 'user';
+    public $tableComment = "用户";
+    public $columnComment = [
+        'name' => '姓名',
+        'sex' => '性别',
+    ];
 
     public function getSexTextAttribute($key): string
     {
