@@ -9,7 +9,7 @@ namespace Chance\Log;
 trait RegisterThinkOrmEvent
 {
     // 日志记录的主键名称
-    public string $logKey = 'id';
+    public $logKey = 'id';
 
     public static function onAfterInsert($model){
         ThinkOrmLog::created($model);

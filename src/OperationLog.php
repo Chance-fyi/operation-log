@@ -9,12 +9,12 @@ namespace Chance\Log;
 class OperationLog
 {
     // 表注释
-    protected static array $tableComment;
+    protected static $tableComment;
     // 字段注释
-    protected static array $columnComment;
+    protected static $columnComment;
 
     // 日志
-    protected static string $log = '';
+    protected static $log = '';
 
     public static function getLog(): string
     {

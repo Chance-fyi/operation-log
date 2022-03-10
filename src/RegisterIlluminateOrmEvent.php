@@ -10,7 +10,7 @@ namespace Chance\Log;
 trait RegisterIlluminateOrmEvent
 {
     // 日志记录的主键名称
-    public string $logKey = 'id';
+    public $logKey = 'id';
 
     protected static function booted()
     {
