@@ -5,15 +5,17 @@ services:
     build:
       context: .
     ports:
-      - 9000:9000
+      - "9000:9000"
     volumes:
       - .:/home
     working_dir: /home
+    environment:
+      - PHP_IDE_CONFIG=serverName=log
     tty: true
   mysql:
     image: mysql
     ports:
-      - 3306:3306
+      - "3306:3306"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "root"
