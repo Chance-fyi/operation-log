@@ -7,6 +7,11 @@
 
 namespace Chance\Log\Test\model;
 
+/**
+ * @property mixed $id
+ * @property mixed|string $name
+ * @property int|mixed $sex
+ */
 class IUser extends IBase
 {
     protected $table = 'user';
@@ -18,6 +23,6 @@ class IUser extends IBase
 
     public function getSexTextAttribute($key): string
     {
-        return ['女','男'][($key ?? $this->sex)] ?? '未知';
+        return ['女', '男'][($key ?? $this->sex)] ?? '未知';
     }
 }

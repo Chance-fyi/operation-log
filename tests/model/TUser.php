@@ -6,6 +6,11 @@
 
 namespace Chance\Log\Test\model;
 
+/**
+ * @property mixed $id
+ * @property mixed|string $name
+ * @property int|mixed $sex
+ */
 class TUser extends TBase
 {
     protected $name = 'user';
@@ -17,6 +22,6 @@ class TUser extends TBase
 
     public function getSexTextAttr($key): string
     {
-        return ['女','男'][($key ?? $this->sex)] ?? '未知';
+        return ['女', '男'][($key ?? $this->sex)] ?? '未知';
     }
 }

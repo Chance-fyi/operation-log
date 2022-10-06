@@ -8,15 +8,54 @@ namespace Chance\Log;
 
 interface OperationLogInterface
 {
-    public static function created($model);
+    /**
+     * Notes: 获取表名
+     * DateTime: 2022/9/28 17:22
+     * @param $model
+     * @return string
+     */
+    public function getTableName($model): string;
 
-    public static function updated($model);
+    /**
+     * Notes: 获取数据库名
+     * DateTime: 2022/9/28 17:25
+     * @param $model
+     * @return string
+     */
+    public function getDatabaseName($model): string;
 
-    public static function deleted($model);
+    /**
+     * Notes: 执行SQL
+     * DateTime: 2022/9/28 17:29
+     * @param string $sql
+     * @return mixed
+     */
+    public function executeSQL(string $sql);
 
-    public static function getTableComment($model);
+    /**
+     * Notes: 获取模型上当前所有的属性
+     * DateTime: 2022/10/6 14:33
+     * @param $model
+     * @return array
+     */
+    public function getAttributes($model): array;
 
-    public static function getColumnComment($model, $field);
+    /**
+     * Notes: 获取模型上当前修改的属性
+     * DateTime: 2022/10/6 14:34
+     * @param $model
+     * @return array
+     */
+    public function getChangedAttributes($model): array;
 
-    public static function getLog();
+    public function getValue($model, string $key): string;
+
+    public function getOldValue($model, string $key): string;
+
+    public function created($model);
+
+    public function updated($model);
+
+    public function deleted($model);
+
 }

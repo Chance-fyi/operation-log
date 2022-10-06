@@ -6,7 +6,7 @@
 
 namespace Chance\Log\Test\model;
 
-use Chance\Log\RegisterThinkOrmEvent;
+use Chance\Log\traits\RegisterThinkOrmEvent;
 use think\Model;
 
 class TBase extends Model

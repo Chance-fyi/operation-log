@@ -51,22 +51,23 @@ class Base extends TestCase
         Db::setConfig([
             'connections' => [
                 'mysql' => [
-                'type' => 'mysql',
-                'hostname' => 'mysql',
-                'database' => 'test',
-                'username' => 'root',
-                'password' => 'root',
-                'charset' => 'utf8',
-                'collation' => 'utf8_unicode_ci',
-                'prefix' => 'tb_',
+                    'type' => 'mysql',
+                    'hostname' => 'mysql',
+                    'database' => 'test',
+                    'username' => 'root',
+                    'password' => 'root',
+                    'charset' => 'utf8',
+                    'collation' => 'utf8_unicode_ci',
+                    'prefix' => 'tb_',
                 ]
             ]
         ]);
     }
 
     // 创建表
-    protected function createTable(){
-        if (!Manager::select("show tables like 'tb_user';")){
+    protected function createTable()
+    {
+        if (!Manager::select("show tables like 'tb_user';")) {
             Manager::select("
                 create table tb_user
                 (
