@@ -70,7 +70,7 @@ class IlluminateOrmLog extends OperationLog implements OperationLogInterface
      */
     public function getValue($model, string $key): string
     {
-        $keyText = $key . '_text';
+        $keyText = $key . "_text";
         return $model->$keyText ?? $model->$key;
     }
 
@@ -81,8 +81,8 @@ class IlluminateOrmLog extends OperationLog implements OperationLogInterface
      */
     public function getOldValue($model, string $key): string
     {
-        $keyText = $key . '_text';
-        $attributeFun = 'get' . Str::studly(Str::lower($keyText)) . 'Attribute';
+        $keyText = $key . "_text";
+        $attributeFun = "get" . Str::studly(Str::lower($keyText)) . "Attribute";
         return (string)(method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOriginal($key)) : $model->getOriginal($key));
     }
 
@@ -99,5 +99,20 @@ class IlluminateOrmLog extends OperationLog implements OperationLogInterface
     public function deleted($model)
     {
         $this->generateLog($model, self::DELETED);
+    }
+
+    public function batchCreated($model, array $data)
+    {
+        // TODO: Implement batchCreated() method.
+    }
+
+    public function batchUpdated($model, array $oldData, array $data)
+    {
+        // TODO: Implement batchUpdated() method.
+    }
+
+    public function batchDeleted($model, array $data)
+    {
+        // TODO: Implement batchDeleted() method.
     }
 }

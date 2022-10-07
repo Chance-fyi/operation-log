@@ -12,7 +12,7 @@ abstract class Facade
 
     protected static function getFacadeClass(): string
     {
-        return '';
+        return "";
     }
 
     public static function setResolvedInstance($class, $instance)
@@ -23,8 +23,8 @@ abstract class Facade
     public static function __callStatic($method, $args)
     {
         $class = static::getFacadeClass();
-        $instance = self::$resolvedInstance[$class] ?? new $class;
+        $instance = self::$resolvedInstance[$class] ?? new $class();
         self::$resolvedInstance[$class] = $instance;
-        return $instance->$method(...$args);
+        return call_user_func_array([$instance, $method], $args);
     }
 }

@@ -7,6 +7,7 @@
 
 namespace Chance\Log\Test;
 
+use Chance\Log\query\ThinkOrmQuery;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Events\Dispatcher;
@@ -28,20 +29,20 @@ class Base extends TestCase
     {
         $capsule = new Manager();
         $capsule->addConnection([
-            'driver' => 'mysql',
-            'host' => 'mysql',
-            'database' => 'test',
-            'username' => 'root',
-            'password' => 'root',
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => 'tb_',
+            "driver" => "mysql",
+            "host" => "mysql",
+            "database" => "test",
+            "username" => "root",
+            "password" => "root",
+            "charset" => "utf8",
+            "collation" => "utf8_unicode_ci",
+            "prefix" => "tb_",
         ]);
         // Set the event dispatcher used by Eloquent models... (optional)
         $capsule->setEventDispatcher(new Dispatcher(new Container));
         // Make this Capsule instance available globally via static methods... (optional)
         $capsule->setAsGlobal();
-        // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
+        // Setup the Eloquent ORM... (optional; unless you"ve used setEventDispatcher())
         $capsule->bootEloquent();
     }
 
@@ -49,16 +50,19 @@ class Base extends TestCase
     protected function connectionT()
     {
         Db::setConfig([
-            'connections' => [
-                'mysql' => [
-                    'type' => 'mysql',
-                    'hostname' => 'mysql',
-                    'database' => 'test',
-                    'username' => 'root',
-                    'password' => 'root',
-                    'charset' => 'utf8',
-                    'collation' => 'utf8_unicode_ci',
-                    'prefix' => 'tb_',
+            "connections" => [
+                "mysql" => [
+                    "type" => "mysql",
+                    "hostname" => "mysql",
+                    "database" => "test",
+                    "username" => "root",
+                    "password" => "root",
+                    "charset" => "utf8",
+                    "collation" => "utf8_unicode_ci",
+                    "prefix" => "tb_",
+                    "query" => ThinkOrmQuery::class,
+                    "modelNamespace" => "Chance\Log\Test\model",
+                    "logKey" => "id",
                 ]
             ]
         ]);

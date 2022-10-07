@@ -16,7 +16,7 @@ class LogTest extends Base
     public function testCreateI()
     {
         $user = new IUser();
-        $user->name = 'Create';
+        $user->name = "Create";
         $user->sex = 1;
         $user->save();
         $id = $user->id;
@@ -30,7 +30,7 @@ class LogTest extends Base
     public function testUpdateI($id)
     {
         $user = IUser::find($id);
-        $user->name = 'Update';
+        $user->name = "Update";
         $user->sex = 0;
         $user->save();
         $this->assertEquals("修改 用户 (id:$id)：姓名由：Create 改为：Update，性别由：男 改为：女", OperationLog::getLog());
@@ -50,7 +50,7 @@ class LogTest extends Base
     public function testCreateT()
     {
         $user = new TUser();
-        $user->name = 'Create';
+        $user->name = "Create";
         $user->sex = 1;
         $user->save();
         $id = $user->id;
@@ -64,7 +64,7 @@ class LogTest extends Base
     public function testUpdateT($id)
     {
         $user = TUser::find($id);
-        $user->name = 'Update';
+        $user->name = "Update";
         $user->sex = 0;
         $user->save();
         $this->assertEquals("修改 用户 (id:$id)：姓名由：Create 改为：Update，性别由：男 改为：女", OperationLog::getLog());

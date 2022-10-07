@@ -24,13 +24,14 @@ class OperationLog
     protected $columnComment;
 
     // 日志
-    protected $log = '';
+    protected $log = "";
 
-    const CREATED = 'created';
-    const BATCH_CREATED = 'batch_created';
-    const UPDATED = 'updated';
-    const BATCH_UPDATED = 'batch_updated';
-    const DELETED = 'deleted';
+    const CREATED = "created";
+    const BATCH_CREATED = "batch_created";
+    const UPDATED = "updated";
+    const BATCH_UPDATED = "batch_updated";
+    const DELETED = "deleted";
+    const BATCH_DELETED = "batch_deleted";
 
     public function __construct()
     {
@@ -40,7 +41,7 @@ class OperationLog
     public function getLog(): string
     {
         $log = $this->log;
-        $this->log = '';
+        $this->log = "";
         return trim($log, PHP_EOL);
     }
 
@@ -48,7 +49,7 @@ class OperationLog
     {
         $this->tableComment = [];
         $this->columnComment = [];
-        $this->log = '';
+        $this->log = "";
     }
 
     /**
@@ -72,12 +73,12 @@ class OperationLog
         }
 
         foreach ($this->tableComment[$databaseName] as $item) {
-            if ($item['TABLE_NAME'] == $table) {
-                $comment = $item['TABLE_COMMENT'];
+            if ($item["TABLE_NAME"] == $table) {
+                $comment = $item["TABLE_COMMENT"];
                 break;
             }
         }
-        return $comment ?: $table;
+        return (string)($comment ?: $table);
     }
 
     /**
@@ -101,32 +102,34 @@ class OperationLog
             $this->columnComment[$databaseName] = $this->executeSQL("SELECT TABLE_NAME,COLUMN_NAME,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$databaseName'");
         }
         foreach ($this->columnComment[$databaseName] as $item) {
-            if ($item->TABLE_NAME == $table && $item->COLUMN_NAME == $field) {
-                $comment = $item->COLUMN_COMMENT;
+            if ($item["TABLE_NAME"] == $table && $item["COLUMN_NAME"] == $field) {
+                $comment = $item["COLUMN_COMMENT"];
                 break;
             }
         }
-        return $comment ?: $field;
+        return (string)($comment ?: $field);
     }
 
     public function generateLog($model, string $type)
     {
-        $logKey = $model->logKey;
+        $logKey = $model->logKey ?? $model->getPk();
         $typeText = [
-            self::CREATED => '创建',
-            self::BATCH_CREATED => '批量创建',
-            self::UPDATED => '修改',
-            self::BATCH_UPDATED => '批量修改',
-            self::DELETED => '删除',
+            self::CREATED => "创建",
+            self::BATCH_CREATED => "批量创建",
+            self::UPDATED => "修改",
+            self::BATCH_UPDATED => "批量修改",
+            self::DELETED => "删除",
+            self::BATCH_DELETED => "批量删除",
         ][$type];
         $logHeader = "$typeText {$this->getTableComment($model)}" .
-            (in_array($type, [self::CREATED, self::UPDATED, self::BATCH_UPDATED, self::DELETED]) ? " ({$this->getColumnComment($model, $logKey)}:{$model->$logKey})：" : "：");
+            (in_array($type, [self::CREATED, self::UPDATED, self::BATCH_UPDATED, self::DELETED, self::BATCH_DELETED]) ? " ({$this->getColumnComment($model, $logKey)}:{$model->$logKey})：" : "：");
         $log = "";
 
         switch ($type) {
             case self::CREATED:
             case self::BATCH_CREATED:
             case self::DELETED:
+            case self::BATCH_DELETED:
                 foreach ($this->getAttributes($model) as $key => $value) {
                     if ($logKey === $key) {
                         continue;
@@ -145,7 +148,7 @@ class OperationLog
                 break;
         }
         if (!empty($log)) {
-            $this->log .= trim($logHeader . $log, '，') . PHP_EOL;
+            $this->log .= trim($logHeader . $log, "，") . PHP_EOL;
         }
     }
 }

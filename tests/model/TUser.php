@@ -13,15 +13,15 @@ namespace Chance\Log\Test\model;
  */
 class TUser extends TBase
 {
-    protected $name = 'user';
+    protected $name = "user";
     public $tableComment = "用户";
     public $columnComment = [
-        'name' => '姓名',
-        'sex' => '性别',
+        "name" => "姓名",
+        "sex" => "性别",
     ];
 
     public function getSexTextAttr($key): string
     {
-        return ['女', '男'][($key ?? $this->sex)] ?? '未知';
+        return ["女", "男"][($key ?? $this->sex)] ?? "未知";
     }
 }

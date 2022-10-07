@@ -6,10 +6,9 @@
 
 namespace Chance\Log\Test\model;
 
-use Chance\Log\traits\RegisterThinkOrmEvent;
 use think\Model;
 
 class TBase extends Model
 {
-    use RegisterThinkOrmEvent;
+    public $logKey = "id";
 }

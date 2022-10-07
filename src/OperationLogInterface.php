@@ -58,4 +58,10 @@ interface OperationLogInterface
 
     public function deleted($model);
 
+    public function batchCreated($model, array $data);
+
+    public function batchUpdated($model, array $oldData, array $data);
+
+    public function batchDeleted($model, array $data);
+
 }
