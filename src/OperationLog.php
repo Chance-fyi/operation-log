@@ -27,7 +27,9 @@ class OperationLog
     protected $log = '';
 
     const CREATED = 'created';
+    const BATCH_CREATED = 'batch_created';
     const UPDATED = 'updated';
+    const BATCH_UPDATED = 'batch_updated';
     const DELETED = 'deleted';
 
     public function __construct()
@@ -112,13 +114,18 @@ class OperationLog
         $logKey = $model->logKey;
         $typeText = [
             self::CREATED => '创建',
+            self::BATCH_CREATED => '批量创建',
             self::UPDATED => '修改',
+            self::BATCH_UPDATED => '批量修改',
             self::DELETED => '删除',
         ][$type];
-        $log = "$typeText {$this->getTableComment($model)} ({$this->getColumnComment($model, $logKey)}:{$model->$logKey})：";
+        $logHeader = "$typeText {$this->getTableComment($model)}" .
+            (in_array($type, [self::CREATED, self::UPDATED, self::BATCH_UPDATED, self::DELETED]) ? " ({$this->getColumnComment($model, $logKey)}:{$model->$logKey})：" : "：");
+        $log = "";
 
         switch ($type) {
             case self::CREATED:
+            case self::BATCH_CREATED:
             case self::DELETED:
                 foreach ($this->getAttributes($model) as $key => $value) {
                     if ($logKey === $key) {
@@ -128,6 +135,7 @@ class OperationLog
                 }
                 break;
             case self::UPDATED:
+            case self::BATCH_UPDATED:
                 foreach ($this->getChangedAttributes($model) as $key => $value) {
                     if ($logKey === $key) {
                         continue;
@@ -136,6 +144,8 @@ class OperationLog
                 }
                 break;
         }
-        $this->log .= trim($log, '，') . PHP_EOL;
+        if (!empty($log)) {
+            $this->log .= trim($logHeader . $log, '，') . PHP_EOL;
+        }
     }
 }

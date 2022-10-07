@@ -75,7 +75,7 @@ class ThinkOrmLog extends OperationLog implements OperationLogInterface
     {
         $keyText = $key . '_text';
         $attributeFun = 'get' . Str::studly(Str::lower($keyText)) . 'Attr';
-        return method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOrigin($key)) : $model->getOrigin($key);
+        return (string)(method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOrigin($key)) : $model->getOrigin($key));
     }
 
     public function created($model)
@@ -91,5 +91,29 @@ class ThinkOrmLog extends OperationLog implements OperationLogInterface
     public function deleted($model)
     {
         $this->generateLog($model, self::DELETED);
+    }
+
+    public function insert(Model $model, array $data)
+    {
+        $model->setAttrs($data);
+        $this->generateLog($model, self::CREATED);
+    }
+
+    public function insertAll(Model $model, array $data)
+    {
+        foreach ($data as $item) {
+            $model->setAttrs($item);
+            $this->generateLog($model, self::BATCH_CREATED);
+        }
+    }
+
+    public function update(Model $model, array $oldData, array $data)
+    {
+        foreach ($oldData as $item) {
+            $model->setAttrs($item);
+            $model->refreshOrigin();
+            $model->setAttrs($data);
+            $this->generateLog($model, self::BATCH_UPDATED);
+        }
     }
 }

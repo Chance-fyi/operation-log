@@ -83,7 +83,7 @@ class IlluminateOrmLog extends OperationLog implements OperationLogInterface
     {
         $keyText = $key . '_text';
         $attributeFun = 'get' . Str::studly(Str::lower($keyText)) . 'Attribute';
-        return method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOriginal($key)) : $model->getOriginal($key);
+        return (string)(method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOriginal($key)) : $model->getOriginal($key));
     }
 
     public function created($model)
