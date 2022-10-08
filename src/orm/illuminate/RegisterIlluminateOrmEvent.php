@@ -5,7 +5,7 @@
  * Date 2021/12/31 11:08
  */
 
-namespace Chance\Log\traits;
+namespace Chance\Log\orm\illuminate;
 
 use Chance\Log\facades\IlluminateOrmLog;
 

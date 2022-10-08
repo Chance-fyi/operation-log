@@ -4,14 +4,12 @@
  * Date 2022/10/7 16:19
  */
 
-namespace Chance\Log\query;
+namespace Chance\Log\orm\think;
 
-use Chance\Log\DbModel;
 use Chance\Log\facades\ThinkOrmLog;
-use think\db\Query;
 use think\Model;
 
-class ThinkOrmQuery extends Query
+class Query extends \think\db\Query
 {
     public function insert(array $data = [], bool $getLastInsID = false)
     {

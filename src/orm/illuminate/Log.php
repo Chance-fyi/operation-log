@@ -5,7 +5,7 @@
  * Date 2021/12/31 11:10
  */
 
-namespace Chance\Log\orm;
+namespace Chance\Log\orm\illuminate;
 
 use Chance\Log\OperationLog;
 use Chance\Log\OperationLogInterface;
@@ -13,7 +13,7 @@ use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class IlluminateOrmLog extends OperationLog implements OperationLogInterface
+class Log extends OperationLog implements OperationLogInterface
 {
     /**
      * @param Model $model

@@ -7,6 +7,7 @@
 namespace Chance\Log\facades;
 
 use Chance\Log\Facade;
+use Chance\Log\orm\think\Log;
 use think\Model;
 
 /**
@@ -21,6 +22,6 @@ class ThinkOrmLog extends Facade
 {
     protected static function getFacadeClass(): string
     {
-        return \Chance\Log\orm\ThinkOrmLog::class;
+        return Log::class;
     }
 }

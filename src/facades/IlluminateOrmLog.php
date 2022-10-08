@@ -7,6 +7,7 @@
 namespace Chance\Log\facades;
 
 use Chance\Log\Facade;
+use Chance\Log\orm\illuminate\Log;
 
 /**
  * @method static created($model)
@@ -17,6 +18,6 @@ class IlluminateOrmLog extends Facade
 {
     protected static function getFacadeClass(): string
     {
-        return \Chance\Log\orm\IlluminateOrmLog::class;
+        return Log::class;
     }
 }

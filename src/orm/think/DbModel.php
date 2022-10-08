@@ -4,7 +4,7 @@
  * Date 2022/10/7 11:44
  */
 
-namespace Chance\Log;
+namespace Chance\Log\orm\think;
 
 use think\Model;
 

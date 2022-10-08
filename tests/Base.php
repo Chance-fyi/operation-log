@@ -7,7 +7,7 @@
 
 namespace Chance\Log\Test;
 
-use Chance\Log\query\ThinkOrmQuery;
+use Chance\Log\orm\think\Query;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Events\Dispatcher;
@@ -60,7 +60,7 @@ class Base extends TestCase
                     "charset" => "utf8",
                     "collation" => "utf8_unicode_ci",
                     "prefix" => "tb_",
-                    "query" => ThinkOrmQuery::class,
+                    "query" => Query::class,
                     "modelNamespace" => "Chance\Log\Test\model",
                     "logKey" => "id",
                 ]

@@ -7,7 +7,7 @@
 
 namespace Chance\Log\Test\model;
 
-use Chance\Log\traits\RegisterIlluminateOrmEvent;
+use Chance\Log\orm\illuminate\RegisterIlluminateOrmEvent;
 use Illuminate\Database\Eloquent\Model;
 
 class IBase extends Model
