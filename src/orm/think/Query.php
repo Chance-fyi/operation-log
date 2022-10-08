@@ -21,12 +21,11 @@ class Query extends \think\db\Query
             $id = $this->getLastInsID();
         }
 
-        $model = $this->generateModel($this);
+        $model = $this->generateModel();
         $pk = $this->getPk();
         $data = $data ?: $this->getOptions("data");
         $data[$pk] = $id;
-        $model->setAttrs($data);
-        ThinkOrmLog::created($model);
+        ThinkOrmLog::created($model, $data);
 
         return $result;
     }
@@ -35,7 +34,7 @@ class Query extends \think\db\Query
     {
         $result = parent::insertAll($dataSet, $limit);
 
-        $model = $this->generateModel($this);
+        $model = $this->generateModel();
         ThinkOrmLog::batchCreated($model, $dataSet);
 
         return $result;
@@ -43,7 +42,7 @@ class Query extends \think\db\Query
 
     public function update(array $data = []): int
     {
-        $model = $this->generateModel($this);
+        $model = $this->generateModel();
         $newData = $data ?: $this->getOptions("data");
         $field = array_keys($newData);
         $field[] = $model->logKey ?? $model->getPk();
@@ -63,10 +62,7 @@ class Query extends \think\db\Query
             if (count($oldData) > 1) {
                 ThinkOrmLog::batchUpdated($model, $oldData, $newData);
             } else {
-                $model->setAttrs($oldData[0]);
-                $model->refreshOrigin();
-                $model->setAttrs($newData);
-                ThinkOrmLog::updated($model);
+                ThinkOrmLog::updated($model, $oldData[0], $newData);
             }
         }
 
@@ -75,7 +71,7 @@ class Query extends \think\db\Query
 
     public function delete($data = null): int
     {
-        $model = $this->generateModel($this);
+        $model = $this->generateModel();
         if (!empty($data)) {
             $pk = $model->getPk();
             $delData = $this->whereIn($pk, $data)->select()->toArray();
@@ -87,8 +83,7 @@ class Query extends \think\db\Query
             if (count($delData) > 1) {
                 ThinkOrmLog::batchDeleted($model, $delData);
             } else {
-                $model->setAttrs($delData[0]);
-                ThinkOrmLog::deleted($model);
+                ThinkOrmLog::deleted($model, $delData[0]);
             }
         }
 
@@ -99,25 +94,24 @@ class Query extends \think\db\Query
     /**
      * Notes: 生成Model对象
      * DateTime: 2022/10/7 16:34
-     * @param Query $query
      * @return Model
      */
-    private function generateModel(Query $query): Model
+    private function generateModel(): Model
     {
-        if ($query->getModel()) {
-            return $query->getModel();
+        if ($this->getModel()) {
+            return $this->getModel();
         }
 
-        $name = $query->getName();
-        $modelNamespace = $query->getConfig("modelNamespace") ?: "app\model";
+        $name = $this->getName();
+        $modelNamespace = $this->getConfig("modelNamespace") ?: "app\model";
         $className = trim($modelNamespace, "\\") . "\\" . ucfirst($name);
         if (class_exists($className)) {
             $model = new $className;
         } else {
             $model = new DbModel($name);
-            $model->table($query->getTable());
-            $model->logKey = $query->getConfig("logKey") ?: $model->getPk();
-            $model->pk($query->getPk());
+            $model->table($this->getTable());
+            $model->logKey = $this->getConfig("logKey") ?: $model->getPk();
+            $model->pk($this->getPk());
         }
         return $model;
     }

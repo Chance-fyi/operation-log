@@ -7,12 +7,10 @@
 
 namespace Chance\Log\Test\model;
 
-use Chance\Log\orm\illuminate\RegisterIlluminateOrmEvent;
 use Illuminate\Database\Eloquent\Model;
 
 class IBase extends Model
 {
-    use RegisterIlluminateOrmEvent;
-
     public $timestamps = false;
+    protected $guarded = [];
 }

@@ -7,9 +7,11 @@
 
 namespace Chance\Log\Test;
 
+use Chance\Log\orm\illuminate\MySqlConnection;
 use Chance\Log\orm\think\Query;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Connection;
 use Illuminate\Events\Dispatcher;
 use PHPUnit\Framework\TestCase;
 use think\facade\Db;
@@ -37,6 +39,8 @@ class Base extends TestCase
             "charset" => "utf8",
             "collation" => "utf8_unicode_ci",
             "prefix" => "tb_",
+            "modelNamespace" => "Chance\Log\Test\model",
+            "logKey" => "id",
         ]);
         // Set the event dispatcher used by Eloquent models... (optional)
         $capsule->setEventDispatcher(new Dispatcher(new Container));
@@ -44,6 +48,9 @@ class Base extends TestCase
         $capsule->setAsGlobal();
         // Setup the Eloquent ORM... (optional; unless you"ve used setEventDispatcher())
         $capsule->bootEloquent();
+        Connection::resolverFor('mysql', function ($connection, $database, $prefix, $config) {
+            return new MySqlConnection($connection, $database, $prefix, $config);
+        });
     }
 
     // 连接数据库 think orm

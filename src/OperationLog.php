@@ -7,6 +7,7 @@
 namespace Chance\Log;
 
 /**
+ * @method getPk($model)
  * @method getTableName($model)
  * @method getDatabaseName($model)
  * @method executeSQL($sql)
@@ -73,8 +74,12 @@ class OperationLog
         }
 
         foreach ($this->tableComment[$databaseName] as $item) {
-            if ($item["TABLE_NAME"] == $table) {
+            if (is_array($item) && $item["TABLE_NAME"] == $table) {
                 $comment = $item["TABLE_COMMENT"];
+                break;
+            }
+            if (is_object($item) && $item->TABLE_NAME == $table) {
+                $comment = $item->TABLE_COMMENT;
                 break;
             }
         }
@@ -102,8 +107,12 @@ class OperationLog
             $this->columnComment[$databaseName] = $this->executeSQL("SELECT TABLE_NAME,COLUMN_NAME,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$databaseName'");
         }
         foreach ($this->columnComment[$databaseName] as $item) {
-            if ($item["TABLE_NAME"] == $table && $item["COLUMN_NAME"] == $field) {
+            if (is_array($item) && $item["TABLE_NAME"] == $table && $item["COLUMN_NAME"] == $field) {
                 $comment = $item["COLUMN_COMMENT"];
+                break;
+            }
+            if (is_object($item) && $item->TABLE_NAME == $table && $item->COLUMN_NAME == $field) {
+                $comment = $item->COLUMN_COMMENT;
                 break;
             }
         }
@@ -112,7 +121,7 @@ class OperationLog
 
     public function generateLog($model, string $type)
     {
-        $logKey = $model->logKey ?? $model->getPk();
+        $logKey = $model->logKey ?? $this->getPk($model);
         $typeText = [
             self::CREATED => "创建",
             self::BATCH_CREATED => "批量创建",

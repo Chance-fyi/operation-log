@@ -20,7 +20,7 @@ class LogTest extends Base
         $user->sex = 1;
         $user->save();
         $id = $user->id;
-        $this->assertEquals("创建 用户 (id:$id)：姓名：Create，性别：男", OperationLog::getLog());
+        $this->assertEquals("创建 用户 (id:$id)：姓名：Create，性别：1", OperationLog::getLog());
         return $id;
     }
 
@@ -33,7 +33,7 @@ class LogTest extends Base
         $user->name = "Update";
         $user->sex = 0;
         $user->save();
-        $this->assertEquals("修改 用户 (id:$id)：姓名由：Create 改为：Update，性别由：男 改为：女", OperationLog::getLog());
+        $this->assertEquals("修改 用户 (id:$id)：姓名由：Create 改为：Update，性别由：1 改为：0", OperationLog::getLog());
         return $id;
     }
 
@@ -43,7 +43,7 @@ class LogTest extends Base
     public function testDeleteI($id)
     {
         IUser::destroy($id);
-        $this->assertEquals("删除 用户 (id:$id)：姓名：Update，性别：女", OperationLog::getLog());
+        $this->assertEquals("删除 用户 (id:$id)：姓名：Update，性别：0", OperationLog::getLog());
         OperationLog::clear();
     }
 

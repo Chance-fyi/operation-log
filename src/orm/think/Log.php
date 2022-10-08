@@ -16,6 +16,16 @@ use think\Model;
 class Log extends OperationLog implements OperationLogInterface
 {
     /**
+     * DateTime: 2022/10/8 10:56
+     * @param Model $model
+     * @return string
+     */
+    public function getPk($model): string
+    {
+        return $model->getPk();
+    }
+
+    /**
      * @param Model $model
      * @return string
      */
@@ -89,28 +99,37 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * DateTime: 2022/10/7 18:10
-     * @param Model $model
+     * @param $model
+     * @param array $data
      */
-    public function created($model)
+    public function created($model, array $data)
     {
+        $model->setAttrs($data);
         $this->generateLog($model, self::CREATED);
     }
 
     /**
      * DateTime: 2022/10/7 18:10
      * @param Model $model
+     * @param array $oldData
+     * @param array $data
      */
-    public function updated($model)
+    public function updated($model, array $oldData, array $data)
     {
+        $model->setAttrs($oldData);
+        $model->refreshOrigin();
+        $model->setAttrs($data);
         $this->generateLog($model, self::UPDATED);
     }
 
     /**
      * DateTime: 2022/10/7 18:10
      * @param Model $model
+     * @param array $data
      */
-    public function deleted($model)
+    public function deleted($model, array $data)
     {
+        $model->setAttrs($data);
         $this->generateLog($model, self::DELETED);
     }
 

@@ -8,7 +8,9 @@ require "vendor/autoload.php";
 
 use Chance\Log\facades\OperationLog;
 use Chance\Log\Test\Base;
+use Chance\Log\Test\model\IUser;
 use Chance\Log\Test\model\TUser;
+
 use think\facade\Db;
 
 new Base("");
@@ -52,7 +54,8 @@ $user = new TUser();
 // 批量新增 无法获取id
 //$user->insertAll($allData);
 
-//-------------DB----------------
+
+//-------------DB-------------------
 // DB类 新增单条
 //Db::name("user")->save($data);
 
@@ -89,7 +92,8 @@ $user = new TUser();
 // 自增
 //TUser::where("id", 1)->inc("name", 1)->update();
 
-//-------------DB----------------
+
+//-------------DB-------------------
 // 包含主键更新单条
 //Db::name("user")->save(["id" => 1] + $data);
 
@@ -137,7 +141,8 @@ Db::startTrans();
 // 根据条件多条删除
 //TUser::where("id", "<", 10)->delete();
 
-//-------------DB----------------
+
+//-------------DB-------------------
 // 单条删除
 //Db::name("user")->delete(1);
 // 根据id多条删除
@@ -148,5 +153,88 @@ Db::startTrans();
 //Db::name("user")->where("id","<",10)->delete();
 
 Db::rollback();
+
+//=====================================================IlluminateORM======================================
+use Illuminate\Database\Capsule\Manager;
+
+$user = new IUser();
+//-----------------------------------------------------新增------------------------------------------------
+//-------------Model----------------
+// 单条新增
+//$user->name = rand(0, 100000);
+//$user->sex = rand(0, 1);
+//$user->save();
+
+// 单条新增
+//IUser::create($data);
+
+
+//-------------DB-------------------
+// insert 单条、多条新增
+//Manager::table("user")->insert($data);
+//Manager::table("user")->insert($allData);
+
+// insertGetId 单条新增
+//Manager::table("user")->insertGetId($data);
+
+// insertOrIgnore 单条、多条新增
+//Manager::table("user")->insertOrIgnore($data);
+//Manager::table("user")->insertOrIgnore($allData);
+
+//-----------------------------------------------------修改------------------------------------------------
+//-------------Model----------------
+//$user = IUser::find(1);
+//$user->name = rand(0, 100000);
+//$user->sex = rand(0, 1);
+//$user->save();
+
+// 批量修改
+//IUser::query()->where("id", "<", 10)->update($data);
+
+//-------------DB-------------------
+// 单条修改
+//Manager::table("user")->where("id", "=", 1)->update($data);
+
+// 多条修改
+//Manager::table("user")->where("id", "<", 10)->update($data);
+
+// 自增 自减 单条、多条
+//Manager::table("user")->where("id", "=", 1)->increment("name", 5);
+//Manager::table("user")->where("id", "<", 10)->increment("name", 5);
+//Manager::table("user")->where("id", "=", 1)->increment("name", 5);
+//Manager::table("user")->where("id", "<", 10)->decrement("name", 5);
+// 指定要更新的其他列
+//Manager::table("user")->where("id", "<", 10)->decrement("name", 5, ["sex" => 1]);
+
+//-----------------------------------------------------删除------------------------------------------------
+Manager::beginTransaction();
+//echo Manager::table("user")->count() . PHP_EOL;
+//-------------Model----------------
+// 单条删除
+//$user = IUser::find(1);
+//$user->delete();
+
+//IUser::destroy(1);
+//IUser::destroy(1, 2, 3);
+//IUser::destroy([1, 2, 3]);
+//IUser::destroy(collect([1, 2, 3]));
+
+//-------------DB-------------------
+// 不带条件 删除全部
+//Manager::table("user")->delete();
+
+// 删除一条
+//Manager::table("user")->delete(1);
+//Manager::table("user")->delete(9999999);
+
+// 删除多条
+//Manager::table("user")->where("id", "<", 10)->delete();
+
+
+//echo Manager::table("user")->count() . PHP_EOL;
+Manager::rollBack();
+
+// 清空表
+//Manager::table("user")->truncate();
 
 echo OperationLog::getLog() . PHP_EOL;

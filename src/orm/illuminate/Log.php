@@ -16,6 +16,16 @@ use Illuminate\Support\Str;
 class Log extends OperationLog implements OperationLogInterface
 {
     /**
+     * DateTime: 2022/10/8 10:58
+     * @param Model $model
+     * @return string
+     */
+    public function getPk($model): string
+    {
+        return $model->getKeyName();
+    }
+
+    /**
      * @param Model $model
      * @return string
      */
@@ -35,7 +45,7 @@ class Log extends OperationLog implements OperationLogInterface
 
     public function executeSQL(string $sql)
     {
-        return Manager::select($sql);
+        return Manager::connection()->select($sql);
     }
 
     /**
@@ -53,14 +63,7 @@ class Log extends OperationLog implements OperationLogInterface
      */
     public function getChangedAttributes($model): array
     {
-        $data = [];
-        foreach ($model->getAttributes() as $key => $value) {
-            if ($model->isClean($key)) {
-                continue;
-            }
-            $data[$key] = $value;
-        }
-        return $data;
+        return $model->getChanges();
     }
 
     /**
@@ -71,7 +74,7 @@ class Log extends OperationLog implements OperationLogInterface
     public function getValue($model, string $key): string
     {
         $keyText = $key . "_text";
-        return $model->$keyText ?? $model->$key;
+        return (string)($model->$keyText ?? $model->$key);
     }
 
     /**
@@ -86,33 +89,99 @@ class Log extends OperationLog implements OperationLogInterface
         return (string)(method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOriginal($key)) : $model->getOriginal($key));
     }
 
-    public function created($model)
+    /**
+     * DateTime: 2022/10/8 11:22
+     * @param Model $model
+     * @param array $data
+     */
+    public function created($model, array $data)
     {
+        foreach ($data as $key => $value) {
+            $model->setAttribute($key, $value);
+        }
         $this->generateLog($model, self::CREATED);
     }
 
-    public function updated($model)
+    /**
+     * DateTime: 2022/10/8 11:22
+     * @param Model $model
+     * @param array $oldData
+     * @param array $data
+     */
+    public function updated($model, array $oldData, array $data)
     {
+        foreach ($oldData as $key => $value) {
+            $model->setAttribute($key, $value);
+        }
+        $model->syncOriginal();
+        foreach ($data as $key => $value) {
+            $model->setAttribute($key, $value);
+        }
+        $model->syncChanges();
         $this->generateLog($model, self::UPDATED);
     }
 
-    public function deleted($model)
+    /**
+     * DateTime: 2022/10/8 11:22
+     * @param Model $model
+     * @param array $data
+     */
+    public function deleted($model, array $data)
     {
+        foreach ($data as $key => $value) {
+            $model->setAttribute($key, $value);
+        }
         $this->generateLog($model, self::DELETED);
     }
 
+    /**
+     * DateTime: 2022/10/8 11:22
+     * @param Model $model
+     * @param array $data
+     */
     public function batchCreated($model, array $data)
     {
-        // TODO: Implement batchCreated() method.
+        foreach ($data as $item) {
+            foreach ($item as $key => $value) {
+                $model->setAttribute($key, $value);
+            }
+            $this->generateLog($model, self::BATCH_CREATED);
+        }
     }
 
+    /**
+     * DateTime: 2022/10/8 11:22
+     * @param Model $model
+     * @param array $oldData
+     * @param array $data
+     */
     public function batchUpdated($model, array $oldData, array $data)
     {
-        // TODO: Implement batchUpdated() method.
+        foreach ($oldData as $item) {
+            foreach ((array)$item as $key => $value) {
+                $model->setAttribute($key, $value);
+            }
+            $model->syncOriginal();
+            foreach ($data as $key => $value) {
+                $model->setAttribute($key, $value);
+            }
+            $model->syncChanges();
+            $this->generateLog($model, self::UPDATED);
+        }
     }
 
+    /**
+     * DateTime: 2022/10/8 11:22
+     * @param Model $model
+     * @param array $data
+     */
     public function batchDeleted($model, array $data)
     {
-        // TODO: Implement batchDeleted() method.
+        foreach ($data as $item) {
+            foreach ((array)$item as $key => $value) {
+                $model->setAttribute($key, $value);
+            }
+            $this->generateLog($model, self::DELETED);
+        }
     }
 }

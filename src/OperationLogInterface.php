@@ -9,6 +9,14 @@ namespace Chance\Log;
 interface OperationLogInterface
 {
     /**
+     * Notes: 获取主键
+     * DateTime: 2022/10/8 10:55
+     * @param $model
+     * @return string
+     */
+    public function getPk($model): string;
+
+    /**
      * Notes: 获取表名
      * DateTime: 2022/9/28 17:22
      * @param $model
@@ -52,11 +60,11 @@ interface OperationLogInterface
 
     public function getOldValue($model, string $key): string;
 
-    public function created($model);
+    public function created($model, array $data);
 
-    public function updated($model);
+    public function updated($model, array $oldData, array $data);
 
-    public function deleted($model);
+    public function deleted($model, array $data);
 
     public function batchCreated($model, array $data);
 
