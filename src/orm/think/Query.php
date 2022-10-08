@@ -7,6 +7,7 @@
 namespace Chance\Log\orm\think;
 
 use Chance\Log\facades\ThinkOrmLog;
+use think\helper\Str;
 use think\Model;
 
 class Query extends \think\db\Query
@@ -104,7 +105,7 @@ class Query extends \think\db\Query
 
         $name = $this->getName();
         $modelNamespace = $this->getConfig("modelNamespace") ?: "app\model";
-        $className = trim($modelNamespace, "\\") . "\\" . ucfirst($name);
+        $className = trim($modelNamespace, "\\") . "\\" . Str::studly($name);
         if (class_exists($className)) {
             $model = new $className;
         } else {

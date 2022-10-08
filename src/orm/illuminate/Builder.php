@@ -8,6 +8,7 @@ namespace Chance\Log\orm\illuminate;
 
 use Chance\Log\facades\IlluminateOrmLog;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Builder extends \Illuminate\Database\Query\Builder
 {
@@ -75,7 +76,7 @@ class Builder extends \Illuminate\Database\Query\Builder
     {
         $name = $this->from;
         $modelNamespace = $this->getConnection()->getConfig("modelNamespace") ?: "app\model";
-        $className = trim($modelNamespace, "\\") . "\\" . ucfirst($name);
+        $className = trim($modelNamespace, "\\") . "\\" . Str::studly($name);
         if (class_exists($className)) {
             $model = new $className;
         } else {

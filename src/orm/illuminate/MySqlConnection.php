@@ -8,7 +8,7 @@ namespace Chance\Log\orm\illuminate;
 
 class MySqlConnection extends \Illuminate\Database\MySqlConnection
 {
-    public function query()
+    public function query(): Builder
     {
         return new Builder(
             $this, $this->getQueryGrammar(), $this->getPostProcessor()
