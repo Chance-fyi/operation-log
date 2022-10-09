@@ -35,10 +35,11 @@ interface OperationLogInterface
     /**
      * Notes: 执行SQL
      * DateTime: 2022/9/28 17:29
+     * @param $model
      * @param string $sql
      * @return mixed
      */
-    public function executeSQL(string $sql);
+    public function executeSQL($model, string $sql);
 
     /**
      * Notes: 获取模型上当前所有的属性

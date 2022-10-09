@@ -111,6 +111,7 @@ class Query extends \think\db\Query
         } else {
             $model = new DbModel($name);
             $model->table($this->getTable());
+            $model->setQuery($this);
             $model->logKey = $this->getConfig("logKey") ?: $model->getPk();
             $model->pk($this->getPk());
         }

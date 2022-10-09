@@ -81,6 +81,7 @@ class Builder extends \Illuminate\Database\Query\Builder
             $model = new $className;
         } else {
             $model = new DbModel();
+            $model->setQuery($this->getConnection());
             $model->setTable($name);
             $model->logKey = $this->getConnection()->getConfig("logKey") ?: $model->getKeyName();
         }

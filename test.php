@@ -154,6 +154,11 @@ Db::startTrans();
 
 Db::rollback();
 
+//-----------------------------------------------------多数据库---------------------------------------------
+//$user->insert($data);
+//Db::name("user")->insert($data);
+//Db::connect("default1")->name("user")->insert($data);
+
 //=====================================================IlluminateORM======================================
 use Illuminate\Database\Capsule\Manager;
 
@@ -236,5 +241,10 @@ Manager::rollBack();
 
 // 清空表
 //Manager::table("user")->truncate();
+
+//-----------------------------------------------------多数据库---------------------------------------------
+//$user->insert($data);
+//Manager::table("user")->insert($data);
+//Manager::connection("default1")->table("user")->insert($data);
 
 echo OperationLog::getLog() . PHP_EOL;

@@ -15,8 +15,16 @@ services:
   mysql:
     image: mysql
     ports:
-      - "3306:3306"
+      - "33060:3306"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "test"
+  mysql1:
+    image: mysql
+    ports:
+      - "33061:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "test1"

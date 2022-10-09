@@ -40,12 +40,24 @@ class Log extends OperationLog implements OperationLogInterface
      */
     public function getDatabaseName($model): string
     {
+        if (method_exists($model, "getQuery")) {
+            return $model->getQuery()->getDatabaseName();
+        }
         return $model->getConnection()->getDatabaseName();
     }
 
-    public function executeSQL(string $sql)
+    /**
+     * DateTime: 2022/10/9 13:15
+     * @param Model $model
+     * @param string $sql
+     * @return array
+     */
+    public function executeSQL($model, string $sql): array
     {
-        return Manager::connection()->select($sql);
+        if (method_exists($model, "getQuery")) {
+            return $model->getQuery()->select($sql);
+        }
+        return $model->getConnection()->select($sql);
     }
 
     /**

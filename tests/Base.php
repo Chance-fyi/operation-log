@@ -40,6 +40,18 @@ class Base extends TestCase
             "modelNamespace" => "Chance\Log\Test\model",
             "logKey" => "id",
         ]);
+        $capsule->addConnection([
+            "driver" => "mysql",
+            "host" => "mysql1",
+            "database" => "test1",
+            "username" => "root",
+            "password" => "root",
+            "charset" => "utf8",
+            "collation" => "utf8_unicode_ci",
+            "prefix" => "tb_",
+            "modelNamespace" => "Chance\Log\Test\model",
+            "logKey" => "id",
+        ], "default1");
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
         Connection::resolverFor('mysql', function ($connection, $database, $prefix, $config) {
@@ -64,7 +76,20 @@ class Base extends TestCase
                     "query" => Query::class,
                     "modelNamespace" => "Chance\Log\Test\model",
                     "logKey" => "id",
-                ]
+                ],
+                "default1" => [
+                    "type" => "mysql",
+                    "hostname" => "mysql1",
+                    "database" => "test1",
+                    "username" => "root",
+                    "password" => "root",
+                    "charset" => "utf8",
+                    "collation" => "utf8_unicode_ci",
+                    "prefix" => "tb_",
+                    "query" => Query::class,
+                    "modelNamespace" => "Chance\Log\Test\model",
+                    "logKey" => "id",
+                ],
             ]
         ]);
     }
@@ -82,6 +107,18 @@ class Base extends TestCase
                     sex  tinyint default 0 null comment '性别'
                 )
                     comment '用户';
+            ");
+        }
+        if (!Manager::connection("default1")->select("show tables like 'tb_user';")) {
+            Manager::connection("default1")->select("
+                create table tb_user
+                (
+                    id   int auto_increment
+                        primary key,
+                    name varchar(20)       null comment '姓名1',
+                    sex  tinyint default 0 null comment '性别1'
+                )
+                    comment '用户1';
             ");
         }
     }

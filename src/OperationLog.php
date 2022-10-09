@@ -10,7 +10,7 @@ namespace Chance\Log;
  * @method getPk($model)
  * @method getTableName($model)
  * @method getDatabaseName($model)
- * @method executeSQL($sql)
+ * @method executeSQL($model, $sql)
  * @method getAttributes($model)
  * @method getChangedAttributes($model)
  * @method getValue($model, string $key)
@@ -70,7 +70,7 @@ class OperationLog
         $comment = "";
 
         if (empty($this->tableComment[$databaseName])) {
-            $this->tableComment[$databaseName] = $this->executeSQL("SELECT TABLE_NAME, TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '$databaseName'");
+            $this->tableComment[$databaseName] = $this->executeSQL($model, "SELECT TABLE_NAME, TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '$databaseName'");
         }
 
         foreach ($this->tableComment[$databaseName] as $item) {
@@ -104,7 +104,7 @@ class OperationLog
         $comment = "";
 
         if (empty($this->columnComment[$databaseName])) {
-            $this->columnComment[$databaseName] = $this->executeSQL("SELECT TABLE_NAME,COLUMN_NAME,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$databaseName'");
+            $this->columnComment[$databaseName] = $this->executeSQL($model, "SELECT TABLE_NAME,COLUMN_NAME,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '$databaseName'");
         }
         foreach ($this->columnComment[$databaseName] as $item) {
             if (is_array($item) && $item["TABLE_NAME"] == $table && $item["COLUMN_NAME"] == $field) {
