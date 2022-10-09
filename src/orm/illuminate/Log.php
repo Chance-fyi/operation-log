@@ -166,7 +166,7 @@ class Log extends OperationLog implements OperationLogInterface
                 $model->setAttribute($key, $value);
             }
             $model->syncChanges();
-            $this->generateLog($model, self::UPDATED);
+            $this->generateLog($model, self::BATCH_UPDATED);
         }
     }
 
@@ -181,7 +181,7 @@ class Log extends OperationLog implements OperationLogInterface
             foreach ((array)$item as $key => $value) {
                 $model->setAttribute($key, $value);
             }
-            $this->generateLog($model, self::DELETED);
+            $this->generateLog($model, self::BATCH_DELETED);
         }
     }
 }
