@@ -10,7 +10,7 @@ use Chance\Log\Facade;
 
 /**
  * @method static getLog()
- * @method static clear()
+ * @method static clearLog()
  */
 class OperationLog extends Facade
 {

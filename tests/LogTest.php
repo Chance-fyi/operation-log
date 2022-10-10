@@ -44,7 +44,6 @@ class LogTest extends Base
     {
         IUser::destroy($id);
         $this->assertEquals("删除 用户 (id:$id)：姓名：Update，性别：0", OperationLog::getLog());
-        OperationLog::clear();
     }
 
     public function testCreateT()

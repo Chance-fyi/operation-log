@@ -42,14 +42,12 @@ class OperationLog
     public function getLog(): string
     {
         $log = $this->log;
-        $this->log = "";
+        $this->clearLog();
         return trim($log, PHP_EOL);
     }
 
-    public function clear()
+    public function clearLog()
     {
-        $this->tableComment = [];
-        $this->columnComment = [];
         $this->log = "";
     }
 
