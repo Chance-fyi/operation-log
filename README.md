@@ -152,3 +152,9 @@ class User extends BaseModel
 ```php
 \Chance\Log\facades\OperationLog::getLog();
 ```
+
+### 清除日志信息
+
+```php
+\Chance\Log\facades\OperationLog::clearLog();
+```
