@@ -43,7 +43,7 @@ class LogTest extends Base
     public function testDeleteI($id)
     {
         IUser::destroy($id);
-        $this->assertEquals("删除 用户 (id:$id)：姓名：Update，性别：0", OperationLog::getLog());
+        $this->assertEquals("删除 用户 (id:$id)：姓名：Update，性别：0，json：", OperationLog::getLog());
     }
 
     public function testCreateT()
@@ -76,6 +76,6 @@ class LogTest extends Base
     public function testDeleteT($id)
     {
         TUser::destroy($id);
-        $this->assertEquals("删除 用户 (id:$id)：姓名：Update，性别：女", OperationLog::getLog());
+        $this->assertEquals("删除 用户 (id:$id)：姓名：Update，性别：女，json：", OperationLog::getLog());
     }
 }

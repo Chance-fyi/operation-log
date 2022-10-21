@@ -18,19 +18,23 @@ new Base("");
 $data = [
     "name" => rand(0, 100000),
     "sex" => rand(0, 1),
+    "json" => array_rand(range(0, 100), 5),
 ];
 $allData = [
     [
         "name" => rand(0, 100000),
         "sex" => rand(0, 1),
+        "json" => array_rand(range(0, 100), 5),
     ],
     [
         "name" => rand(0, 100000),
         "sex" => rand(0, 1),
+        "json" => array_rand(range(0, 100), 5),
     ],
     [
         "name" => rand(0, 100000),
         "sex" => rand(0, 1),
+        "json" => array_rand(range(0, 100), 5),
     ]
 ];
 
@@ -57,16 +61,16 @@ $user = new TUser();
 
 //-------------DB-------------------
 // DB类 新增单条
-//Db::name("user")->save($data);
+//Db::name("user")->json(["json"])->save($data);
 
 // DB类 新增单条
-//Db::name("user")->insert($data);
+//Db::name("user")->json(["json"])->insert($data);
 
 // DB类 新增单条 返回id
-//Db::name("user")->insertGetId($data);
+//Db::name("user")->json(["json"])->insertGetId($data);
 
 // DB类 新增多条
-//Db::name("user")->insertAll($allData);
+//Db::name("user")->json(["json"])->insertAll($allData);
 
 //-----------------------------------------------------修改------------------------------------------------
 //-------------Model----------------
@@ -95,25 +99,25 @@ $user = new TUser();
 
 //-------------DB-------------------
 // 包含主键更新单条
-//Db::name("user")->save(["id" => 1] + $data);
+//Db::name("user")->json(["json"])->save(["id" => 1] + $data);
 
 // 带条件更新多条
-//Db::name("user")->where("id","<", 10)->save($data);
+//Db::name("user")->json(["json"])->where("id","<", 10)->save($data);
 
 // 带条件更新单条
-//Db::name("user")->where("id","=", 10)->save($data);
+//Db::name("user")->json(["json"])->where("id","=", 10)->save($data);
 
 // 带条件更新多条
-//Db::name("user")->where("id","<", 10)->update($data);
+//Db::name("user")->json(["json"])->where("id","<", 10)->update($data);
 
 // 带条件更新单条
-//Db::name("user")->where("id","=", 10)->update($data);
+//Db::name("user")->json(["json"])->where("id","=", 10)->update($data);
 
 // 包含主键更新单条
-//Db::name("user")->update(["id" => 1] + $data);
+//Db::name("user")->json(["json"])->update(["id" => 1] + $data);
 
 // 自增 单条
-//Db::name("user")->where("id", 1)->inc("name", 5)->update();
+//Db::name("user")->json(["json"])->where("id", 1)->inc("name", 5)->update();
 
 // 自减 多条
 //Db::name("user")->where("id", "<", 10)->dec("name", 5)->update();

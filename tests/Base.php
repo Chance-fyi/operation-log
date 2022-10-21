@@ -104,7 +104,8 @@ class Base extends TestCase
                     id   int auto_increment
                         primary key,
                     name varchar(20)       null comment '姓名',
-                    sex  tinyint default 0 null comment '性别'
+                    sex  tinyint default 0 null comment '性别',
+                    json json              null comment 'json' 
                 )
                     comment '用户';
             ");
@@ -116,7 +117,8 @@ class Base extends TestCase
                     id   int auto_increment
                         primary key,
                     name varchar(20)       null comment '姓名1',
-                    sex  tinyint default 0 null comment '性别1'
+                    sex  tinyint default 0 null comment '性别1',
+                    json json              null comment 'json1' 
                 )
                     comment '用户1';
             ");

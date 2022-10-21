@@ -19,6 +19,9 @@ class TUser extends TBase
         "name" => "姓名",
         "sex" => "性别",
     ];
+    protected $json = [
+        "json"
+    ];
 
     public function getSexTextAttr($key): string
     {
