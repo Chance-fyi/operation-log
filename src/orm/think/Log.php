@@ -89,11 +89,11 @@ class Log extends OperationLog implements OperationLogInterface
         $value = $model->$keyText ?? $model->$key;
 
         if (is_array($value)) {
-            return implode(" ", $value);
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
         } elseif ($value instanceof Raw) {
             return $value->getValue();
         } else {
-            return $value;
+            return (string)$value;
         }
     }
 
@@ -106,7 +106,13 @@ class Log extends OperationLog implements OperationLogInterface
     {
         $keyText = $key . "_text";
         $attributeFun = "get" . Str::studly(Str::lower($keyText)) . "Attr";
-        return (string)(method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOrigin($key)) : $model->getOrigin($key));
+        $value = method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOrigin($key)) : $model->getOrigin($key);
+
+        if (is_array($value)) {
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
+        } else {
+            return (string)$value;
+        }
     }
 
     /**

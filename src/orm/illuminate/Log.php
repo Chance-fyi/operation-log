@@ -86,7 +86,13 @@ class Log extends OperationLog implements OperationLogInterface
     public function getValue($model, string $key): string
     {
         $keyText = $key . "_text";
-        return (string)($model->$keyText ?? $model->$key);
+        $value = $model->$keyText ?? $model->$key;
+
+        if (is_array($value)) {
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
+        } else {
+            return (string)$value;
+        }
     }
 
     /**
