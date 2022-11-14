@@ -8,9 +8,9 @@ require "vendor/autoload.php";
 
 use Chance\Log\facades\OperationLog;
 use Chance\Log\Test\Base;
-use Chance\Log\Test\model\IUser;
-use Chance\Log\Test\model\TUser;
-
+use Chance\Log\Test\model\illuminate\User as IUser;
+use Chance\Log\Test\model\think\User as TUser;
+use Illuminate\Database\Capsule\Manager;
 use think\facade\Db;
 
 new Base("");
@@ -164,7 +164,6 @@ Db::rollback();
 //Db::connect("default1")->name("user")->insert($data);
 
 //=====================================================IlluminateORM======================================
-use Illuminate\Database\Capsule\Manager;
 
 $user = new IUser();
 //-----------------------------------------------------新增------------------------------------------------

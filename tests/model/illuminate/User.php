@@ -5,20 +5,24 @@
  * Date 2021/12/31 11:12
  */
 
-namespace Chance\Log\Test\model;
+namespace Chance\Log\Test\model\illuminate;
 
 /**
  * @property mixed $id
  * @property mixed|string $name
  * @property int|mixed $sex
  */
-class IUser extends IBase
+class User extends Base
 {
     protected $table = "user";
     public $tableComment = "用户";
     public $columnComment = [
         "name" => "姓名",
         "sex" => "性别",
+    ];
+    public $ignoreLogFields = [
+        "create_time",
+        "update_time",
     ];
 
     public function getSexTextAttribute($key): string

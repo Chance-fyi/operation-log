@@ -4,11 +4,11 @@
  * Date 2022/3/9 11:20
  */
 
-namespace Chance\Log\Test\model;
+namespace Chance\Log\Test\model\think;
 
 use think\Model;
 
-class TBase extends Model
+class Base extends Model
 {
     public $logKey = "id";
 }

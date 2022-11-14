@@ -138,7 +138,8 @@ class OperationLog
             case self::DELETED:
             case self::BATCH_DELETED:
                 foreach ($this->getAttributes($model) as $key => $value) {
-                    if ($logKey === $key) {
+                    if ($logKey === $key
+                        || (isset($model->ignoreLogFields) && is_array($model->ignoreLogFields) && in_array($key, $model->ignoreLogFields))) {
                         continue;
                     }
                     $log .= "{$this->getColumnComment($model, $key)}：{$this->getValue($model, $key)}，";
@@ -147,7 +148,8 @@ class OperationLog
             case self::UPDATED:
             case self::BATCH_UPDATED:
                 foreach ($this->getChangedAttributes($model) as $key => $value) {
-                    if ($logKey === $key) {
+                    if ($logKey === $key
+                        || (isset($model->ignoreLogFields) && is_array($model->ignoreLogFields) && in_array($key, $model->ignoreLogFields))) {
                         continue;
                     }
                     $log .= "{$this->getColumnComment($model, $key)}由：{$this->getOldValue($model, $key)} 改为：{$this->getValue($model, $key)}，";

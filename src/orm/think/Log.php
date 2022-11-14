@@ -88,7 +88,7 @@ class Log extends OperationLog implements OperationLogInterface
         $keyText = $key . "_text";
         $value = $model->$keyText ?? $model->$key;
 
-        if (is_array($value)) {
+        if (is_array($value) || is_object($value)) {
             return json_encode($value, JSON_UNESCAPED_UNICODE);
         } elseif ($value instanceof Raw) {
             return $value->getValue();
@@ -108,7 +108,7 @@ class Log extends OperationLog implements OperationLogInterface
         $attributeFun = "get" . Str::studly(Str::lower($keyText)) . "Attr";
         $value = method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOrigin($key)) : $model->getOrigin($key);
 
-        if (is_array($value)) {
+        if (is_array($value) || is_object($value)) {
             return json_encode($value, JSON_UNESCAPED_UNICODE);
         } else {
             return (string)$value;

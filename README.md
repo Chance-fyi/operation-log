@@ -126,11 +126,16 @@ class User extends BaseModel
     // 日志记录的主键名称
     public string $logKey = 'id';
     // 表注释
-    public $tableComment = "用户";
+    public $tableComment = '用户';
     // 字段注释
     public $columnComment = [
         'name' => '姓名',
         'sex' => '性别',
+    ];
+    // 日志记录忽略的字段
+    public $ignoreLogFields = [
+        'create_time',
+        'update_time',
     ];
 
     // Laravel ORM 获取器设置方法

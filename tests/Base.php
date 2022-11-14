@@ -37,7 +37,7 @@ class Base extends TestCase
             "charset" => "utf8",
             "collation" => "utf8_unicode_ci",
             "prefix" => "tb_",
-            "modelNamespace" => "Chance\Log\Test\model",
+            "modelNamespace" => "Chance\Log\Test\model\illuminate",
             "logKey" => "id",
         ]);
         $capsule->addConnection([
@@ -49,7 +49,7 @@ class Base extends TestCase
             "charset" => "utf8",
             "collation" => "utf8_unicode_ci",
             "prefix" => "tb_",
-            "modelNamespace" => "Chance\Log\Test\model",
+            "modelNamespace" => "Chance\Log\Test\model\illuminate",
             "logKey" => "id",
         ], "default1");
         $capsule->setAsGlobal();
@@ -74,7 +74,7 @@ class Base extends TestCase
                     "collation" => "utf8_unicode_ci",
                     "prefix" => "tb_",
                     "query" => Query::class,
-                    "modelNamespace" => "Chance\Log\Test\model",
+                    "modelNamespace" => "Chance\Log\Test\model\\think",
                     "logKey" => "id",
                 ],
                 "default1" => [
@@ -87,7 +87,7 @@ class Base extends TestCase
                     "collation" => "utf8_unicode_ci",
                     "prefix" => "tb_",
                     "query" => Query::class,
-                    "modelNamespace" => "Chance\Log\Test\model",
+                    "modelNamespace" => "Chance\Log\Test\model\\think",
                     "logKey" => "id",
                 ],
             ]
@@ -101,11 +101,13 @@ class Base extends TestCase
             Manager::select("
                 create table tb_user
                 (
-                    id   int auto_increment
+                    id          int auto_increment
                         primary key,
-                    name varchar(20)       null comment '姓名',
-                    sex  tinyint default 0 null comment '性别',
-                    json json              null comment 'json' 
+                    name        varchar(20)       null comment '姓名',
+                    sex         tinyint default 0 null comment '性别',
+                    json        json              null comment 'json',
+                    create_time datetime,
+                    update_time datetime
                 )
                     comment '用户';
             ");
@@ -114,11 +116,13 @@ class Base extends TestCase
             Manager::connection("default1")->select("
                 create table tb_user
                 (
-                    id   int auto_increment
+                    id          int auto_increment
                         primary key,
-                    name varchar(20)       null comment '姓名1',
-                    sex  tinyint default 0 null comment '性别1',
-                    json json              null comment 'json1' 
+                    name        varchar(20)       null comment '姓名1',
+                    sex         tinyint default 0 null comment '性别1',
+                    json        json              null comment 'json1',
+                    create_time datetime,
+                    update_time datetime
                 )
                     comment '用户1';
             ");
