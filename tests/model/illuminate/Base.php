@@ -11,6 +11,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Base extends Model
 {
-    public $timestamps = false;
     protected $guarded = [];
 }

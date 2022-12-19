@@ -148,6 +148,8 @@ class OperationLog
             case self::UPDATED:
             case self::BATCH_UPDATED:
                 foreach ($this->getChangedAttributes($model) as $key => $value) {
+                    $keys = explode(".", $key);
+                    $key = end($keys);
                     if ($logKey === $key
                         || (isset($model->ignoreLogFields) && is_array($model->ignoreLogFields) && in_array($key, $model->ignoreLogFields))) {
                         continue;

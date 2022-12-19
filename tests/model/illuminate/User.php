@@ -20,6 +20,8 @@ class User extends Base
         "name" => "姓名",
         "sex" => "性别",
     ];
+    const CREATED_AT = "create_time";
+    const UPDATED_AT = "update_time";
     public $ignoreLogFields = [
         "create_time",
         "update_time",
