@@ -25,7 +25,7 @@ class OperationLog
     protected $columnComment;
 
     // 日志
-    protected $log = "";
+    protected $log = [""];
 
     const CREATED = "created";
     const BATCH_CREATED = "batch_created";
@@ -43,12 +43,25 @@ class OperationLog
     {
         $log = $this->log;
         $this->clearLog();
-        return trim($log, PHP_EOL);
+        return trim(implode("", $log), PHP_EOL);
     }
 
     public function clearLog()
     {
-        $this->log = "";
+        $this->log = [""];
+    }
+
+    public function beginTransaction()
+    {
+        $this->log[] = "";
+    }
+
+    public function rollBackTransaction()
+    {
+        array_pop($this->log);
+        if (count($this->log) === 0) {
+            $this->clearLog();
+        }
     }
 
     /**
@@ -159,7 +172,7 @@ class OperationLog
                 break;
         }
         if (!empty($log)) {
-            $this->log .= trim($logHeader . $log, "，") . PHP_EOL;
+            array_splice($this->log, -1, 1, end($this->log) . trim($logHeader . $log, "，") . PHP_EOL);
         }
     }
 }

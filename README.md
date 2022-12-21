@@ -58,8 +58,6 @@ return [
     ...
     'connections'     => [
         'mysql' => [
-            // 数据库类型
-            'type'            => env('database.type', 'mysql'),
             // 服务器地址
             'hostname'        => env('database.hostname', '127.0.0.1'),
             // 数据库名
@@ -72,8 +70,12 @@ return [
             'hostport'        => env('database.hostport', '3306'),
             ...
             ...
+            // 数据库类型
+            'type'            => \Chance\Log\orm\think\MySqlConnection::class,
             // 指定查询对象
             "query"           => \Chance\Log\orm\think\Query::class,
+            // Builder类
+            "builder"         => \think\db\builder\Mysql::class,
             // 模型所在的命名空间
             "modelNamespace"  => "Chance\Log\Test\model",
             // 日志记录的主键

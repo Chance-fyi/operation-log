@@ -163,6 +163,21 @@ Db::rollback();
 //Db::name("user")->insert($data);
 //Db::connect("default1")->name("user")->insert($data);
 
+//-------------------------------------------------------事务----------------------------------------------
+//Db::startTrans();
+//TUser::create($data);
+//Db::startTrans();
+//TUser::create($data);
+//Db::rollback();
+//Db::commit();
+//
+//Db::startTrans();
+//TUser::create($data);
+//Db::rollback();
+//
+//Db::startTrans();
+//TUser::create($data);
+//Db::commit();
 //=====================================================IlluminateORM======================================
 
 $user = new IUser();
@@ -249,5 +264,21 @@ Manager::rollBack();
 //$user->insert($data);
 //Manager::table("user")->insert($data);
 //Manager::connection("default1")->table("user")->insert($data);
+
+//-------------------------------------------------------事务----------------------------------------------
+//Manager::beginTransaction();
+//IUser::create($data);
+//Manager::beginTransaction();
+//IUser::create($data);
+//Manager::rollBack();
+//Manager::commit();
+//
+//Manager::beginTransaction();
+//IUser::create($data);
+//Manager::rollBack();
+//
+//Manager::beginTransaction();
+//IUser::create($data);
+//Manager::commit();
 
 echo OperationLog::getLog() . PHP_EOL;

@@ -12,6 +12,7 @@ use Chance\Log\orm\think\Query;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
 use PHPUnit\Framework\TestCase;
+use think\db\builder\Mysql;
 use think\facade\Db;
 
 class Base extends TestCase
@@ -65,7 +66,7 @@ class Base extends TestCase
         Db::setConfig([
             "connections" => [
                 "mysql" => [
-                    "type" => "mysql",
+                    "type" => \Chance\Log\orm\think\MySqlConnection::class,
                     "hostname" => "mysql",
                     "database" => "test",
                     "username" => "root",
@@ -73,12 +74,13 @@ class Base extends TestCase
                     "charset" => "utf8",
                     "collation" => "utf8_unicode_ci",
                     "prefix" => "tb_",
+                    "builder" => Mysql::class,
                     "query" => Query::class,
                     "modelNamespace" => "Chance\Log\Test\model\\think",
                     "logKey" => "id",
                 ],
                 "default1" => [
-                    "type" => "mysql",
+                    "type" => \Chance\Log\orm\think\MySqlConnection::class,
                     "hostname" => "mysql1",
                     "database" => "test1",
                     "username" => "root",
@@ -86,6 +88,7 @@ class Base extends TestCase
                     "charset" => "utf8",
                     "collation" => "utf8_unicode_ci",
                     "prefix" => "tb_",
+                    "builder" => Mysql::class,
                     "query" => Query::class,
                     "modelNamespace" => "Chance\Log\Test\model\\think",
                     "logKey" => "id",

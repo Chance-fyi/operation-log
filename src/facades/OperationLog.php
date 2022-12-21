@@ -11,6 +11,8 @@ use Chance\Log\Facade;
 /**
  * @method static getLog()
  * @method static clearLog()
+ * @method static beginTransaction()
+ * @method static rollBackTransaction()
  */
 class OperationLog extends Facade
 {
