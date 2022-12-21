@@ -114,9 +114,7 @@ class Log extends OperationLog implements OperationLogInterface
      */
     public function created($model, array $data)
     {
-        foreach ($data as $key => $value) {
-            $model->setAttribute($key, $value);
-        }
+        $model->setRawAttributes($data);
         $this->generateLog($model, self::CREATED);
     }
 
@@ -128,13 +126,8 @@ class Log extends OperationLog implements OperationLogInterface
      */
     public function updated($model, array $oldData, array $data)
     {
-        foreach ($oldData as $key => $value) {
-            $model->setAttribute($key, $value);
-        }
-        $model->syncOriginal();
-        foreach ($data as $key => $value) {
-            $model->setAttribute($key, $value);
-        }
+        $model->setRawAttributes($oldData, true);
+        $model->setRawAttributes(array_merge($oldData, $data));
         $model->syncChanges();
         $this->generateLog($model, self::UPDATED);
     }
@@ -146,9 +139,7 @@ class Log extends OperationLog implements OperationLogInterface
      */
     public function deleted($model, array $data)
     {
-        foreach ($data as $key => $value) {
-            $model->setAttribute($key, $value);
-        }
+        $model->setRawAttributes($data);
         $this->generateLog($model, self::DELETED);
     }
 
@@ -160,9 +151,7 @@ class Log extends OperationLog implements OperationLogInterface
     public function batchCreated($model, array $data)
     {
         foreach ($data as $item) {
-            foreach ($item as $key => $value) {
-                $model->setAttribute($key, $value);
-            }
+            $model->setRawAttributes($item);
             $this->generateLog($model, self::BATCH_CREATED);
         }
     }
@@ -176,13 +165,8 @@ class Log extends OperationLog implements OperationLogInterface
     public function batchUpdated($model, array $oldData, array $data)
     {
         foreach ($oldData as $item) {
-            foreach ((array)$item as $key => $value) {
-                $model->setAttribute($key, $value);
-            }
-            $model->syncOriginal();
-            foreach ($data as $key => $value) {
-                $model->setAttribute($key, $value);
-            }
+            $model->setRawAttributes((array)$item, true);
+            $model->setRawAttributes(array_merge((array)$item, $data));
             $model->syncChanges();
             $this->generateLog($model, self::BATCH_UPDATED);
         }
@@ -196,9 +180,7 @@ class Log extends OperationLog implements OperationLogInterface
     public function batchDeleted($model, array $data)
     {
         foreach ($data as $item) {
-            foreach ((array)$item as $key => $value) {
-                $model->setAttribute($key, $value);
-            }
+            $model->setRawAttributes((array)$item);
             $this->generateLog($model, self::BATCH_DELETED);
         }
     }
