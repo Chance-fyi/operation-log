@@ -72,5 +72,4 @@ interface OperationLogInterface
     public function batchUpdated($model, array $oldData, array $data);
 
     public function batchDeleted($model, array $data);
-
 }

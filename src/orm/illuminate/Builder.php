@@ -7,6 +7,7 @@
 namespace Chance\Log\orm\illuminate;
 
 use Chance\Log\facades\IlluminateOrmLog;
+use Chance\Log\facades\OperationLog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -75,11 +76,17 @@ class Builder extends \Illuminate\Database\Query\Builder
     private function generateModel(): Model
     {
         $name = $this->from;
-        $map = include __DIR__ . "/../../../cache/table-model-mapping.php";
         $database = $this->getConnection()->getDatabaseName();
         $table = $this->getConnection()->getTablePrefix() . $name;
-        if (is_array($map) && isset($map[$database][$table])) {
-            return new $map[$database][$table];
+
+        $mapping = [
+            OperationLog::getTableModelMapping(),
+            include __DIR__ . "/../../../cache/table-model-mapping.php",
+        ];
+        foreach ($mapping as $map) {
+            if (is_array($map) && isset($map[$database][$table]) && class_exists($map[$database][$table])) {
+                return new $map[$database][$table];
+            }
         }
 
         $modelNamespace = $this->getConnection()->getConfig("modelNamespace") ?: "app\model";

@@ -6,6 +6,7 @@
 
 namespace Chance\Log\orm\think;
 
+use Chance\Log\facades\OperationLog;
 use Chance\Log\facades\ThinkOrmLog;
 use think\helper\Str;
 use think\Model;
@@ -103,11 +104,17 @@ class Query extends \think\db\Query
             return $this->getModel();
         }
 
-        $map = include __DIR__ . "/../../../cache/table-model-mapping.php";
         $database = $this->getConfig("database");
         $table = $this->getTable();
-        if (is_array($map) && isset($map[$database][$table])) {
-            return new $map[$database][$table];
+
+        $mapping = [
+            OperationLog::getTableModelMapping(),
+            include __DIR__ . "/../../../cache/table-model-mapping.php",
+        ];
+        foreach ($mapping as $map) {
+            if (is_array($map) && isset($map[$database][$table]) && class_exists($map[$database][$table])) {
+                return new $map[$database][$table];
+            }
         }
 
         $name = $this->getName();

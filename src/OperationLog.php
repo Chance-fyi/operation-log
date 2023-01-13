@@ -27,6 +27,9 @@ class OperationLog
     // 日志
     protected $log = [""];
 
+    // 表与model映射关系
+    protected $tableModelMapping = [];
+
     const CREATED = "created";
     const BATCH_CREATED = "batch_created";
     const UPDATED = "updated";
@@ -174,5 +177,15 @@ class OperationLog
         if (!empty($log)) {
             array_splice($this->log, -1, 1, end($this->log) . trim($logHeader . $log, "，") . PHP_EOL);
         }
+    }
+
+    public function setTableModelMapping(array $map)
+    {
+        $this->tableModelMapping = $map;
+    }
+
+    public function getTableModelMapping(): array
+    {
+        return $this->tableModelMapping;
     }
 }

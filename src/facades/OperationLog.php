@@ -13,6 +13,8 @@ use Chance\Log\Facade;
  * @method static clearLog()
  * @method static beginTransaction()
  * @method static rollBackTransaction()
+ * @method static setTableModelMapping(array $map)
+ * @method static getTableModelMapping()
  */
 class OperationLog extends Facade
 {
