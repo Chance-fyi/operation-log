@@ -1,0 +1,117 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Created by PhpStorm
+ * Date 2023/1/11 15:34
+ */
+
+$dir = __DIR__ . "/..";
+if (!file_exists($dir . "/autoload.php")) {
+    $dir = __DIR__ . "/../vendor";
+}
+if (!file_exists($dir . "/autoload.php")) {
+    $dir = __DIR__ . "/../../..";
+}
+if (!file_exists($dir . "/autoload.php")) {
+    echo "Autoload not found." . PHP_EOL;
+    exit(1);
+}
+require $dir . "/autoload.php";
+
+// ThinkPHP
+if (class_exists(think\App::class)) {
+    (new think\App())->initialize();
+}// Laravel
+elseif (class_exists(Illuminate\Foundation\Application::class)) {
+    $app = new Illuminate\Foundation\Application($dir . "/../");
+    $app->singleton(
+        Illuminate\Contracts\Http\Kernel::class,
+        App\Http\Kernel::class
+    );
+    $app->singleton(
+        Illuminate\Contracts\Debug\ExceptionHandler::class,
+        App\Exceptions\Handler::class
+    );
+    $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+    $kernel->bootstrap();
+}// webman
+elseif (class_exists(support\App::class)) {
+    support\App::loadAllConfig();
+    support\bootstrap\LaravelDb::start(null);
+}
+
+array_shift($argv);
+$map = [];
+foreach ($argv as $directory) {
+    if (!is_dir($directory)) {
+        echo "$directory is not a directory" . PHP_EOL;
+        exit(1);
+    }
+    $files = new RegexIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)), "/\.php$/");
+    foreach ($files as $file) {
+        $class = getClassNamespaceFromFile($file);
+        if (!class_exists($class)) {
+            continue;
+        }
+        $reflect = new ReflectionClass($class);
+        if (
+            !preg_match("/\\\\model(s)?\\\\/i", $class)
+        ) {
+            continue;
+        }
+
+        $object = $reflect->newInstanceArgs();
+        if (class_exists(think\Model::class) && $object instanceof think\Model) {
+            $map[$object->getConfig("database")][$object->getTable()] = $class;
+            continue;
+        }
+        if (class_exists(Illuminate\Database\Eloquent\Model::class) && $object instanceof Illuminate\Database\Eloquent\Model) {
+            $map[$object->getConnection()->getDatabaseName()][$object->getConnection()->getTablePrefix() . $object->getTable()] = $class;
+        }
+    }
+}
+
+$data = <<<HEREA
+<?php
+
+return %s;
+HEREA;
+file_put_contents("$dir/chance-fyi/operation-log/cache/table-model-mapping.php", sprintf($data, var_export($map, true)));
+
+echo "Success" . PHP_EOL;
+
+function getClassNamespaceFromFile($file): string
+{
+    $content = file_get_contents($file->getRealPath());
+    $tokens = token_get_all($content);
+    $namespace = "";
+    $class = "";
+    $count = count($tokens);
+    $i = 0;
+    while ($i < $count) {
+        $token = $tokens[$i];
+        if (is_array($token) && $token[0] == T_NAMESPACE) {
+            while (++$i < $count) {
+                if ($tokens[$i] === ';') {
+                    $namespace = trim($namespace);
+                    break;
+                }
+                $namespace .= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+            }
+        }
+        if (
+            is_array($token)
+            && $i >= 2
+            && $tokens[$i - 2][0] == T_CLASS
+            && $tokens[$i - 1][0] == T_WHITESPACE
+            && $token[0] == T_STRING
+        ) {
+            $class = trim($tokens[$i][1]);
+            break;
+        }
+
+        $i++;
+    }
+
+    return $namespace . "\\" . $class;
+}

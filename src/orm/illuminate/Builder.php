@@ -75,6 +75,13 @@ class Builder extends \Illuminate\Database\Query\Builder
     private function generateModel(): Model
     {
         $name = $this->from;
+        $map = include __DIR__ . "/../../../cache/table-model-mapping.php";
+        $database = $this->getConnection()->getDatabaseName();
+        $table = $this->getConnection()->getTablePrefix() . $name;
+        if (is_array($map) && isset($map[$database][$table])) {
+            return new $map[$database][$table];
+        }
+
         $modelNamespace = $this->getConnection()->getConfig("modelNamespace") ?: "app\model";
         $className = trim($modelNamespace, "\\") . "\\" . Str::studly($name);
         if (class_exists($className)) {

@@ -1,27 +1,30 @@
 {
-    "name": "chance-fyi/operation-log",
-    "description": "Elegant logging of operations",
-    "type": "library",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Chance\\Log\\": "src/",
-            "Chance\\Log\\Test\\": "tests/"
-        }
-    },
-    "authors": [
-        {
-            "name": "chance",
-            "email": "ctx_ya@qq.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require-dev": {
-        "phpunit/phpunit": "10.0.x-dev",
-        "illuminate/database": "^8.0",
-        "topthink/think-orm": "2.0.x-dev"
-    },
-    "require": {
-        "ext-json": "*"
+  "name": "chance-fyi/operation-log",
+  "description": "Elegant logging of operations",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Chance\\Log\\": "src/",
+      "Chance\\Log\\Test\\": "tests/"
     }
+  },
+  "authors": [
+    {
+      "name": "chance",
+      "email": "ctx_ya@qq.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require-dev": {
+    "phpunit/phpunit": "10.0.x-dev",
+    "illuminate/database": "^8.0",
+    "topthink/think-orm": "2.0.x-dev"
+  },
+  "require": {
+    "ext-json": "*"
+  },
+  "bin": [
+    "bin/chance-fyi-operation-log"
+  ]
 }

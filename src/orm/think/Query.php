@@ -103,6 +103,13 @@ class Query extends \think\db\Query
             return $this->getModel();
         }
 
+        $map = include __DIR__ . "/../../../cache/table-model-mapping.php";
+        $database = $this->getConfig("database");
+        $table = $this->getTable();
+        if (is_array($map) && isset($map[$database][$table])) {
+            return new $map[$database][$table];
+        }
+
         $name = $this->getName();
         $modelNamespace = $this->getConfig("modelNamespace") ?: "app\model";
         $className = trim($modelNamespace, "\\") . "\\" . Str::studly($name);
@@ -110,7 +117,7 @@ class Query extends \think\db\Query
             $model = new $className;
         } else {
             $model = new DbModel($name);
-            $model->table($this->getTable());
+            $model->table($table);
             $model->setQuery($this);
             $model->logKey = $this->getConfig("logKey") ?: $model->getPk();
             $model->pk($this->getPk());
