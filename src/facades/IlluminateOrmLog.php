@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static batchCreated(Model $model, array $data)
  * @method static batchUpdated(Model $model, array $oldData, array $data)
  * @method static batchDeleted(Model $model, array $data)
+ * @method static beginTransaction()
+ * @method static rollBackTransaction()
  */
 class IlluminateOrmLog extends Facade
 {

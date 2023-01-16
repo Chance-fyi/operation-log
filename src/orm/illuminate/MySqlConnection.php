@@ -6,7 +6,7 @@
 
 namespace Chance\Log\orm\illuminate;
 
-use Chance\Log\facades\OperationLog;
+use Chance\Log\facades\IlluminateOrmLog;
 
 class MySqlConnection extends \Illuminate\Database\MySqlConnection
 {
@@ -19,13 +19,13 @@ class MySqlConnection extends \Illuminate\Database\MySqlConnection
 
     public function beginTransaction()
     {
-        OperationLog::beginTransaction();
+        IlluminateOrmLog::beginTransaction();
         parent::beginTransaction();
     }
 
     public function rollBack($toLevel = null)
     {
-        OperationLog::rollBackTransaction();
+        IlluminateOrmLog::rollBackTransaction();
         parent::rollBack($toLevel);
     }
 }

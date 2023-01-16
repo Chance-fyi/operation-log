@@ -178,6 +178,8 @@ Db::rollback();
 //Db::startTrans();
 //TUser::create($data);
 //Db::commit();
+
+echo OperationLog::getLog() . PHP_EOL;
 //=====================================================IlluminateORM======================================
 
 $user = new IUser();

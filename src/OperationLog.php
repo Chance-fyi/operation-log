@@ -6,6 +6,8 @@
 
 namespace Chance\Log;
 
+use Chance\Log\facades\OperationLog as OperationLogFacade;
+
 /**
  * @method getPk($model)
  * @method getTableName($model)
@@ -39,6 +41,9 @@ class OperationLog
 
     public function __construct()
     {
+        if (Facade::getResolvedInstance(self::class)) {
+            $this->setTableModelMapping(OperationLogFacade::getTableModelMapping());
+        }
         Facade::setResolvedInstance(self::class, $this);
     }
 

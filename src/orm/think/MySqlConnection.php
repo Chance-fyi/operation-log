@@ -6,20 +6,20 @@
 
 namespace Chance\Log\orm\think;
 
-use Chance\Log\facades\OperationLog;
+use Chance\Log\facades\ThinkOrmLog;
 use think\db\connector\Mysql;
 
 class MySqlConnection extends Mysql
 {
     public function startTrans(): void
     {
-        OperationLog::beginTransaction();
+        ThinkOrmLog::beginTransaction();
         parent::startTrans();
     }
 
     public function rollback(): void
     {
-        OperationLog::rollBackTransaction();
+        ThinkOrmLog::rollBackTransaction();
         parent::rollback();
     }
 }

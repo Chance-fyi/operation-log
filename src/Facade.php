@@ -20,6 +20,11 @@ abstract class Facade
         self::$resolvedInstance[$class] = $instance;
     }
 
+    public static function getResolvedInstance($class)
+    {
+        return self::$resolvedInstance[$class] ?? null;
+    }
+
     public static function __callStatic($method, $args)
     {
         $class = static::getFacadeClass();
