@@ -140,6 +140,9 @@ class OperationLog
 
     public function generateLog($model, string $type)
     {
+        if ($model->doNotRecordLog) {
+            return;
+        }
         $logKey = $model->logKey ?? $this->getPk($model);
         $typeText = [
             self::CREATED => "创建",
