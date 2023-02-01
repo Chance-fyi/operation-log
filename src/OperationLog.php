@@ -140,7 +140,7 @@ class OperationLog
 
     public function generateLog($model, string $type)
     {
-        if ($model->doNotRecordLog) {
+        if ($model->doNotRecordLog ?? false) {
             return;
         }
         $logKey = $model->logKey ?? $this->getPk($model);

@@ -6,7 +6,11 @@
 
 > composer require chance-fyi/operation-log
 
-### Laravel 使用
+### 注意
+
+> 因为使用了单例，所以在常驻内存的框架中使用一定要在每次请求结束之后将生成的日志清空。
+
+### 使用 Laravel 的 ORM
 
 首先在数据库的配置文件 `config/database.php` 中增加两个配置项 `modelNamespace` 和 `logKey`。
 
@@ -46,9 +50,9 @@ return [
 });
 ```
 
-### ThinkPHP 使用
+### 使用 ThinkPHP 的 ORM
 
-在数据库的配置文件 config/database.php 中增加三个配置项 `query`、`modelNamespace` 和 `logKey`。
+在数据库的配置文件 config/database.php 中增加三个配置项 `query`、`modelNamespace` 和 `logKey`，并修改 `type` 与 `builder`。
 
 ```php
 <?php
@@ -114,6 +118,23 @@ class User extends BaseModel
 
 也可以在模型中通过`$tableComment`与`$columnComment`设置表注释与字段注释。
 
+```php
+<?php
+
+namespace Chance\Log\Test\model;
+
+class User extends BaseModel
+{
+    // 表注释
+    public $tableComment = '用户';
+    // 字段注释
+    public $columnComment = [
+        'name' => '姓名',
+        'sex' => '性别',
+    ];
+}
+```
+
 **获取器**
 
 设置一个名为`字段名_text`的获取器。
@@ -125,21 +146,6 @@ namespace Chance\Log\Test\model;
 
 class User extends BaseModel
 {
-    // 日志记录的主键名称
-    public string $logKey = 'id';
-    // 表注释
-    public $tableComment = '用户';
-    // 字段注释
-    public $columnComment = [
-        'name' => '姓名',
-        'sex' => '性别',
-    ];
-    // 日志记录忽略的字段
-    public $ignoreLogFields = [
-        'create_time',
-        'update_time',
-    ];
-
     // Laravel ORM 获取器设置方法
     public function getSexTextAttribute($key): string
     {
@@ -154,6 +160,57 @@ class User extends BaseModel
 }
 ```
 
+### 日志生成忽略的字段
+
+可在模型中通过 `$ignoreLogFields` 设置该表不希望生成日志的字段。
+
+```php
+<?php
+
+namespace Chance\Log\Test\model;
+
+class User extends BaseModel
+{
+    // 日志生成忽略的字段
+    public $ignoreLogFields = [
+        'create_time',
+        'update_time',
+    ];
+}
+```
+
+### 数据表不生成日志
+
+可在模型中通过 `$doNotRecordLog` 设置该表不在生成日志。
+
+```php
+<?php
+
+namespace Chance\Log\Test\model;
+
+class User extends BaseModel
+{
+    // 不生成该表的日志
+    public $doNotRecordLog = true;
+}
+```
+
+### 表模型映射关系
+
+如果模型文件名与表名不相同，将查找不到表所对应的模型。也就无法完成上面一些，需要在模型中设置的功能。所以可以设置一个表与模型的映射关系，来帮助查找表所对应的模型。
+
+如果是在 ThinkPHP、Laravel、webman 框架中使用，可使用 `php vendor/bin/chance-fyi-operation-log 模型所在目录` 命令来自动构建所选目录中递归查找到的所有模型与表的映射关系。如果命令执行失败，也可选择手动维护映射关系，并通过以下方法手动注入表模型映射关系。
+
+```php
+\Chance\Log\facades\OperationLog::setTableModelMapping([
+    "database1" => [
+        "table1" => "app\\model\\Table1",
+        "table2" => "app\\model\\Table2",
+    ],
+    "database2" => [],
+]);
+```
+
 ### 获取日志信息
 
 ```php
@@ -165,3 +222,17 @@ class User extends BaseModel
 ```php
 \Chance\Log\facades\OperationLog::clearLog();
 ```
+
+### 效果图
+
+![image](https://user-images.githubusercontent.com/37658940/215932487-9c923053-1bdb-4198-a13e-3ca7d668d65c.png)
+
+![image](https://user-images.githubusercontent.com/37658940/215932628-ee02d2d4-b1a0-4fac-a53c-2eda2858c9bc.png)
+
+![image](https://user-images.githubusercontent.com/37658940/215932685-64cf39f3-6ac1-44c1-af29-abc7c078228c.png)
+
+![image](https://user-images.githubusercontent.com/37658940/215932722-99d7ad4b-01d6-4ddc-b47d-9d213c16022e.png)
+
+![image](https://user-images.githubusercontent.com/37658940/215932756-b8a88945-1732-4272-a843-eaf20aea528e.png)
+
+![image](https://user-images.githubusercontent.com/37658940/215932790-b93f54af-7a3e-4098-8765-8821d5d4fcb1.png)
