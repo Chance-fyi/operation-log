@@ -9,7 +9,6 @@ namespace Chance\Log\orm\think;
 use Chance\Log\OperationLog;
 use Chance\Log\OperationLogInterface;
 use think\db\Raw;
-use think\facade\Db;
 use think\helper\Str;
 use think\Model;
 

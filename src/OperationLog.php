@@ -183,10 +183,7 @@ class OperationLog
                 break;
         }
         if (!empty($log)) {
-            $lastChar = mb_substr($log, -1, 1, 'UTF-8');
-            if ($lastChar == '，') {
-                $log = mb_substr($log, 0, mb_strlen($log, 'UTF-8') - 1, 'UTF-8');
-            }
+            $log = mb_substr($log, 0, mb_strlen($log, 'utf8') - 1, 'utf8');
             array_splice($this->log, -1, 1, end($this->log) . $logHeader . $log . PHP_EOL);
         }
     }

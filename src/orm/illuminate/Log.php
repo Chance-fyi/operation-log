@@ -9,7 +9,6 @@ namespace Chance\Log\orm\illuminate;
 
 use Chance\Log\OperationLog;
 use Chance\Log\OperationLogInterface;
-use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
