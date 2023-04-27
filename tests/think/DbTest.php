@@ -171,6 +171,21 @@ class DbTest extends TestCase
         Db::name('user')->delete($id);
         $log .= deleteLog($old);
 
+        $data = mockData();
+        $data['json'] = $data;
+        $id = Db::name('user')->json(["json"])->insertGetId($data);
+        array_unshift($data, $id);
+        $log .= createLog($data);
+
+        $old = Db::name('user')->find($id);
+        $old['json->name'] = json_decode($old['json'], true)['name'];
+        $new = mockData();
+        $new = [
+            'json->name' => $new['name']
+        ];
+        Db::name('user')->where('id', $id)->update($new);
+        $log .= updateLog($old, $new);
+
         assertEquals(OperationLog::getLog(), trim($log));
     }
 

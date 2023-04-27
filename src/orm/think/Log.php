@@ -103,6 +103,11 @@ class Log extends OperationLog implements OperationLogInterface
      */
     public function getOldValue($model, string $key): string
     {
+        if (strpos($key, "->") !== false) {
+            $value = $model->getOrigin(vsprintf("json_extract(`json`, '$.name')", explode("->", $key, 2)));
+            return trim($value, '"');
+        }
+
         $keyText = $key . "_text";
         $attributeFun = "get" . Str::studly(Str::lower($keyText)) . "Attr";
         $value = method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOrigin($key)) : $model->getOrigin($key);

@@ -22,7 +22,7 @@ class TestCase extends BaseTestCase
         self::truncateTable();
     }
 
-    private static function connections()
+    private static function connections(): void
     {
         Db::setConfig([
             "connections" => [
@@ -54,7 +54,7 @@ class TestCase extends BaseTestCase
         ]);
     }
 
-    private static function createTable()
+    private static function createTable(): void
     {
         Db::query("
                 create table if not exists tb_user
@@ -90,7 +90,7 @@ class TestCase extends BaseTestCase
             ");
     }
 
-    private static function truncateTable()
+    private static function truncateTable(): void
     {
         Db::query("truncate table tb_user;");
         Db::connect("default1")->query("truncate table tb_user;");

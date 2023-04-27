@@ -101,9 +101,24 @@ class Log extends OperationLog implements OperationLogInterface
      */
     public function getOldValue($model, string $key): string
     {
+        if (strpos($key, "->") !== false) {
+            [$key, $jsonKey] = explode("->", $key, 2);
+        }
+
         $keyText = $key . "_text";
         $attributeFun = "get" . Str::studly(Str::lower($keyText)) . "Attribute";
-        return (string)(method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOriginal($key)) : $model->getOriginal($key));
+        $value = (string)(method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOriginal($key)) : $model->getOriginal($key));
+
+        $val = json_decode($value, true);
+        if (!isset($jsonKey) || is_null($val) || !is_array($val)) {
+            return $value;
+        }
+
+        foreach (explode("->", $jsonKey) as $k) {
+            $val = $val[$k];
+        }
+
+        return (string)$val;
     }
 
     /**
