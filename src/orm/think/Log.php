@@ -87,10 +87,10 @@ class Log extends OperationLog implements OperationLogInterface
         $keyText = $key . "_text";
         $value = $model->$keyText ?? $model->$key;
 
-        if (is_array($value) || is_object($value)) {
-            return json_encode($value, JSON_UNESCAPED_UNICODE);
-        } elseif ($value instanceof Raw) {
+        if ($value instanceof Raw) {
             return $value->getValue();
+        } elseif (is_array($value) || is_object($value)) {
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
         } else {
             return (string)$value;
         }
