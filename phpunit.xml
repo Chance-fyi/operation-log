@@ -4,4 +4,7 @@
     <testsuite name="think">
         <directory>./tests/think/</directory>
     </testsuite>
+    <testsuite name="illuminate">
+        <directory>./tests/illuminate/</directory>
+    </testsuite>
 </phpunit>
