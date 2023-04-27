@@ -19,7 +19,7 @@ class MySqlConnection extends Mysql
 
     public function rollback(): void
     {
-        ThinkOrmLog::rollBackTransaction();
+        ThinkOrmLog::rollBackTransaction($this->transTimes);
         parent::rollback();
     }
 }

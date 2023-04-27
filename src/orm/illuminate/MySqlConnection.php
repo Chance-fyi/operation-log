@@ -25,7 +25,7 @@ class MySqlConnection extends \Illuminate\Database\MySqlConnection
 
     public function rollBack($toLevel = null)
     {
-        IlluminateOrmLog::rollBackTransaction();
+        IlluminateOrmLog::rollBackTransaction($toLevel);
         parent::rollBack($toLevel);
     }
 }

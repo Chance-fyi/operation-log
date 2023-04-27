@@ -54,19 +54,19 @@ class OperationLog
         return trim(implode("", $log), PHP_EOL);
     }
 
-    public function clearLog()
+    public function clearLog(): void
     {
         $this->log = [""];
     }
 
-    public function beginTransaction()
+    public function beginTransaction(): void
     {
         $this->log[] = "";
     }
 
-    public function rollBackTransaction()
+    public function rollBackTransaction(int $toLevel): void
     {
-        array_pop($this->log);
+        $this->log = array_slice($this->log, 0, $toLevel);
         if (count($this->log) === 0) {
             $this->clearLog();
         }
@@ -138,7 +138,7 @@ class OperationLog
         return (string)($comment ?: $field);
     }
 
-    public function generateLog($model, string $type)
+    public function generateLog($model, string $type): void
     {
         if ($model->doNotRecordLog ?? false) {
             return;
@@ -188,7 +188,7 @@ class OperationLog
         }
     }
 
-    public function setTableModelMapping(array $map)
+    public function setTableModelMapping(array $map): void
     {
         $this->tableModelMapping = $map;
     }

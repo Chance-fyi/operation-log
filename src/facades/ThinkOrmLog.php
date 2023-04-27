@@ -18,7 +18,7 @@ use think\Model;
  * @method static batchUpdated(Model $model, $oldData, array $data)
  * @method static batchDeleted(Model $model, array $data)
  * @method static beginTransaction()
- * @method static rollBackTransaction()
+ * @method static rollBackTransaction(int $toLevel)
  */
 class ThinkOrmLog extends Facade
 {
