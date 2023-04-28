@@ -3,11 +3,11 @@
 use Faker\Factory;
 
 const columnComment = [
-    "name" => "姓名",
-    "phone" => "手机号",
-    "email" => "邮箱",
-    "sex" => "性别",
-    "age" => "年龄",
+    'name' => '姓名',
+    'phone' => '手机号',
+    'email' => '邮箱',
+    'sex' => '性别',
+    'age' => '年龄',
 ];
 
 function createLog(array $data, $batch = false): string
