@@ -12,7 +12,7 @@ const columnComment = [
 
 function createLog(array $data, $batch = false): string
 {
-    $log = sprintf('创建 用户 (id:%s)：', $data[0]);
+    $log = sprintf('创建 用户 (id:%s)：', $data[0] ?? '');
     if ($batch) {
         $log = '批量创建 用户：';
     }
@@ -45,7 +45,6 @@ function updateLog(array $old, array $new, $batch = false): string
     }
 
     foreach ($diffKeys as $key) {
-        $new[$key] = is_array($new[$key]) ? json_encode($new[$key], JSON_UNESCAPED_UNICODE) : $new[$key];
         $log .= (columnComment[$key] ?? $key) . "由：$old[$key] 改为：$new[$key]，";
     }
     return mb_substr($log, 0, mb_strlen($log, 'utf8') - 1, 'utf8') . PHP_EOL;

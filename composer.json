@@ -29,6 +29,9 @@
   "require": {
     "ext-json": "*"
   },
+  "scripts": {
+    "test": "./vendor/bin/phpunit"
+  },
   "bin": [
     "bin/chance-fyi-operation-log"
   ]

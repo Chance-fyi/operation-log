@@ -152,6 +152,7 @@ class DbTest extends TestCase
         $new = mockData();
         $new['json'] = $new;
         Db::name('user')->where('id', $id)->json(['json'])->update($new);
+        $new['json'] = json_encode($new['json'], JSON_UNESCAPED_UNICODE);
         $log .= updateLog($old, $new);
 
         $data = mockData();
@@ -165,6 +166,7 @@ class DbTest extends TestCase
         $new = mockData();
         $new['json'] = $new;
         Db::name('user')->where('id', $id)->json(['json'])->update($new);
+        $new['json'] = json_encode($new['json'], JSON_UNESCAPED_UNICODE);
         $log .= updateLog($old, $new);
 
         $old = Db::name('user')->find($id);

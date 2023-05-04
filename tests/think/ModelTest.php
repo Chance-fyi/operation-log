@@ -208,6 +208,7 @@ class ModelTest extends TestCase
         $new['json'] = $new;
         $user = clone $model;
         $user->where('id', $id)->update($new);
+        $new['json'] = json_encode($new['json'], JSON_UNESCAPED_UNICODE);
         $log .= updateLog($old, $new);
 
         $data = mockData();
@@ -223,6 +224,7 @@ class ModelTest extends TestCase
         $new['json'] = $new;
         $user = clone $model;
         $user->where('id', $id)->update($new);
+        $new['json'] = json_encode($new['json'], JSON_UNESCAPED_UNICODE);
         $log .= updateLog($old, $new);
 
         $user = User::find($id);
