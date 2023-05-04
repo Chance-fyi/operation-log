@@ -422,6 +422,7 @@ class ModelTest extends TestCase
 
         $old = User::order('id')->find()->toArray();
         $new = mockData();
+        $new['sex'] = (int)!$new['sex'];
         $user = new User();
         $user->where('id', $old['id'])->update($new);
         $log .= updateLog($old, $new);
