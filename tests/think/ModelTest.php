@@ -173,7 +173,7 @@ class ModelTest extends TestCase
     {
         $old = User::whereIn('id', [3, 4, 5])->select()->toArray();
         User::whereIn('id', [3, 4, 5])->delete();
-        $log = batchDLog($old);
+        $log = batchDeleteLog($old);
 
         $old = User::where('id', '<=', 8)->select()->toArray();
         User::destroy(array_column($old, 'id'));
@@ -278,7 +278,7 @@ class ModelTest extends TestCase
 
         $old = User::order('id')->find()->toArray();
         $user = new User();
-        $user->where('id', $old['id'])->update(["age" => Db::raw("age - 1")]);
+        $user->where('id', $old['id'])->update(['age' => Db::raw('age - 1')]);
         $log .= updateLog($old, ['age' => 'age - 1']);
 
         assertEquals(OperationLog::getLog(), trim($log));
@@ -293,7 +293,7 @@ class ModelTest extends TestCase
         $log = createLog($data);
 
         $data = mockData();
-        $id = User::connect("default1")->insertGetId($data);
+        $id = User::connect('default1')->insertGetId($data);
         array_unshift($data, $id);
         $log .= vsprintf('创建 用户1 (id:%s)：姓名1：%s，手机号1：%s，邮箱1：%s，性别1：%s，年龄1：%s', $data);
 
@@ -388,12 +388,12 @@ class ModelTest extends TestCase
     public function testComment()
     {
         $data = mockData();
-        $id = User::connect("default1")->insertGetId($data);
+        $id = User::connect('default1')->insertGetId($data);
         array_unshift($data, $id);
         $log = vsprintf('创建 用户1 (id:%s)：姓名1：%s，手机号1：%s，邮箱1：%s，性别1：%s，年龄1：%s', $data) . PHP_EOL;
 
         $data = mockData();
-        $id = Comment::connect("default1")->insertGetId($data);
+        $id = Comment::connect('default1')->insertGetId($data);
         array_unshift($data, $id);
         $log .= createLog($data);
 

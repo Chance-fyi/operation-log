@@ -73,7 +73,7 @@ function deleteLog($data, $batch = false): string
     return mb_substr($log, 0, mb_strlen($log, 'utf8') - 1, 'utf8') . PHP_EOL;
 }
 
-function batchDLog($data): string
+function batchDeleteLog($data): string
 {
     $log = '';
     foreach ($data as $item) {

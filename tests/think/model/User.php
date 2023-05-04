@@ -21,10 +21,7 @@ use think\Model;
  */
 class User extends Model
 {
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-    }
+    protected $name = 'user';
 
     public function setJson($json = [])
     {

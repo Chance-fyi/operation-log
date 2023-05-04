@@ -8,8 +8,6 @@ namespace Chance\Log\Test\think\model;
 
 class Comment extends User
 {
-    protected $name = 'user';
-
     public $tableComment = '用户';
     public $columnComment = [
         'name' => '姓名',

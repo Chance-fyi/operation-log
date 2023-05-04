@@ -65,7 +65,7 @@ class DbTest extends TestCase
     {
         $old = Manager::table('user')->where('id', '<=', 5)->get()->map(fn($v) => (array)$v)->toArray();
         $new = mockData();
-        Manager::table("user")->where("id", "<=", 5)->update($new);
+        Manager::table('user')->where('id', '<=', 5)->update($new);
         $log = batchUpdateLog($old, $new);
 
         assertEquals(OperationLog::getLog(), trim($log));
@@ -88,11 +88,11 @@ class DbTest extends TestCase
     {
         $old = Manager::table('user')->where('id', '<=', 5)->get()->map(fn($v) => (array)$v)->toArray();
         Manager::table('user')->where('id', '<=', 5)->delete();
-        $log = batchDLog($old);
+        $log = batchDeleteLog($old);
 
         $old = Manager::table('user')->get()->map(fn($v) => (array)$v)->toArray();
         Manager::table('user')->delete();
-        $log .= batchDLog($old);
+        $log .= batchDeleteLog($old);
 
         assertEquals(OperationLog::getLog(), trim($log));
     }
@@ -152,7 +152,7 @@ class DbTest extends TestCase
 
         $old = (array)Manager::table('user')->first();
         $new = ['name' => 'Chance'];
-        Manager::table("user")->where("id", $old['id'])->decrement('age', 5, $new);
+        Manager::table('user')->where('id', $old['id'])->decrement('age', 5, $new);
         $new['age'] = '`age` - 5';
         $log .= updateLog($old, $new);
 
@@ -162,12 +162,12 @@ class DbTest extends TestCase
     public function testMultipleDatabases()
     {
         $data = mockData();
-        $id = Manager::table("user")->insertGetId($data);
+        $id = Manager::table('user')->insertGetId($data);
         array_unshift($data, $id);
         $log = createLog($data);
 
         $data = mockData();
-        $id = Manager::connection("default1")->table("user")->insertGetId($data);
+        $id = Manager::connection('default1')->table('user')->insertGetId($data);
         array_unshift($data, $id);
         $log .= vsprintf('创建 用户1 (id:%s)：姓名1：%s，手机号1：%s，邮箱1：%s，性别1：%s，年龄1：%s', $data);
 
@@ -178,7 +178,7 @@ class DbTest extends TestCase
     {
         Manager::beginTransaction();
             $data = mockData();
-            $id = Manager::table("user")->insertGetId($data);
+            $id = Manager::table('user')->insertGetId($data);
             array_unshift($data, $id);
             $log = createLog($data);
         Manager::commit();
@@ -186,32 +186,32 @@ class DbTest extends TestCase
 
         Manager::beginTransaction();
             $data = mockData();
-            Manager::table("user")->insertGetId($data);
+            Manager::table('user')->insertGetId($data);
         Manager::rollback();
         assertEmpty(OperationLog::getLog());
 
         Manager::beginTransaction();
             $data = mockData();
-            $id = Manager::table("user")->insertGetId($data);
+            $id = Manager::table('user')->insertGetId($data);
             array_unshift($data, $id);
             $log = createLog($data);
 
             Manager::beginTransaction();
                 $data = mockData();
-                Manager::table("user")->insertGetId($data);
+                Manager::table('user')->insertGetId($data);
             Manager::rollback();
         Manager::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Manager::beginTransaction();
             $data = mockData();
-            $id = Manager::table("user")->insertGetId($data);
+            $id = Manager::table('user')->insertGetId($data);
             array_unshift($data, $id);
             $log = createLog($data);
 
             Manager::beginTransaction();
                 $data = mockData();
-                $id = Manager::table("user")->insertGetId($data);
+                $id = Manager::table('user')->insertGetId($data);
                 array_unshift($data, $id);
                 $log .= createLog($data);
             Manager::commit();
@@ -220,28 +220,28 @@ class DbTest extends TestCase
 
         Manager::beginTransaction();
             $data = mockData();
-            Manager::table("user")->insertGetId($data);
+            Manager::table('user')->insertGetId($data);
 
             Manager::beginTransaction();
                 $data = mockData();
-                Manager::table("user")->insertGetId($data);
+                Manager::table('user')->insertGetId($data);
             Manager::commit();
         Manager::rollback();
         assertEmpty(OperationLog::getLog());
 
         Manager::beginTransaction();
             $data = mockData();
-            $id = Manager::table("user")->insertGetId($data);
+            $id = Manager::table('user')->insertGetId($data);
             array_unshift($data, $id);
             $log = createLog($data);
 
             Manager::beginTransaction();
                 $data = mockData();
-                Manager::table("user")->insertGetId($data);
+                Manager::table('user')->insertGetId($data);
 
                 Manager::beginTransaction();
                     $data = mockData();
-                    Manager::table("user")->insertGetId($data);
+                    Manager::table('user')->insertGetId($data);
                 Manager::commit();
             Manager::rollback();
         Manager::commit();

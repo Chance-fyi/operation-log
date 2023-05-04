@@ -89,12 +89,12 @@ class DbTest extends TestCase
     {
         $old = Db::name('user')->where('id', '<=', 5)->select()->toArray();
         $new = mockData();
-        Db::name("user")->where("id", "<=", 5)->save($new);
+        Db::name('user')->where('id', '<=', 5)->save($new);
         $log = batchUpdateLog($old, $new);
 
         $old = Db::name('user')->where('id', '<=', 5)->select()->toArray();
         $new = mockData();
-        Db::name("user")->where("id", "<=", 5)->update($new);
+        Db::name('user')->where('id', '<=', 5)->update($new);
         $log .= batchUpdateLog($old, $new);
 
         assertEquals(OperationLog::getLog(), trim($log));
@@ -127,11 +127,11 @@ class DbTest extends TestCase
     {
         $old = Db::name('user')->whereIn('id', [3, 4, 5])->select()->toArray();
         Db::name('user')->delete(array_column($old, 'id'));
-        $log = batchDLog($old);
+        $log = batchDeleteLog($old);
 
         $old = Db::name('user')->where('id', '<=', 7)->select()->toArray();
         Db::name('user')->where('id', '<=', 7)->delete();
-        $log .= batchDLog($old);
+        $log .= batchDeleteLog($old);
 
         assertEquals(OperationLog::getLog(), trim($log));
     }
@@ -144,19 +144,19 @@ class DbTest extends TestCase
     public function testJson()
     {
         $data = mockData();
-        $id = Db::name('user')->json(["json"])->insertGetId($data);
+        $id = Db::name('user')->json(['json'])->insertGetId($data);
         array_unshift($data, $id);
         $log = createLog($data);
 
         $old = Db::name('user')->find($id);
         $new = mockData();
         $new['json'] = $new;
-        Db::name('user')->where('id', $id)->json(["json"])->update($new);
+        Db::name('user')->where('id', $id)->json(['json'])->update($new);
         $log .= updateLog($old, $new);
 
         $data = mockData();
         $data['json'] = $data;
-        $id = Db::name('user')->json(["json"])->insertGetId($data);
+        $id = Db::name('user')->json(['json'])->insertGetId($data);
         array_unshift($data, $id);
         $log .= createLog($data);
 
@@ -164,7 +164,7 @@ class DbTest extends TestCase
         $old['json'] = json_encode(json_decode($old['json'], true), JSON_UNESCAPED_UNICODE);
         $new = mockData();
         $new['json'] = $new;
-        Db::name('user')->where('id', $id)->json(["json"])->update($new);
+        Db::name('user')->where('id', $id)->json(['json'])->update($new);
         $log .= updateLog($old, $new);
 
         $old = Db::name('user')->find($id);
@@ -173,7 +173,7 @@ class DbTest extends TestCase
 
         $data = mockData();
         $data['json'] = $data;
-        $id = Db::name('user')->json(["json"])->insertGetId($data);
+        $id = Db::name('user')->json(['json'])->insertGetId($data);
         array_unshift($data, $id);
         $log .= createLog($data);
 
@@ -213,7 +213,7 @@ class DbTest extends TestCase
         $log .= updateLog((array)$old, ['age' => '["DEC",5]']);
 
         $old = Db::name('user')->order('id')->find();
-        Db::name('user')->where('id', $old['id'])->update(["age" => Db::raw("age - 1")]);
+        Db::name('user')->where('id', $old['id'])->update(['age' => Db::raw('age - 1')]);
         $log .= updateLog((array)$old, ['age' => 'age - 1']);
 
         assertEquals(OperationLog::getLog(), trim($log));
@@ -222,12 +222,12 @@ class DbTest extends TestCase
     public function testMultipleDatabases()
     {
         $data = mockData();
-        $id = Db::name("user")->insertGetId($data);
+        $id = Db::name('user')->insertGetId($data);
         array_unshift($data, $id);
         $log = createLog($data);
 
         $data = mockData();
-        $id = Db::connect("default1")->name("user")->insertGetId($data);
+        $id = Db::connect('default1')->name('user')->insertGetId($data);
         array_unshift($data, $id);
         $log .= vsprintf('创建 用户1 (id:%s)：姓名1：%s，手机号1：%s，邮箱1：%s，性别1：%s，年龄1：%s', $data);
 
@@ -238,7 +238,7 @@ class DbTest extends TestCase
     {
         Db::startTrans();
             $data = mockData();
-            $id = Db::name("user")->insertGetId($data);
+            $id = Db::name('user')->insertGetId($data);
             array_unshift($data, $id);
             $log = createLog($data);
         Db::commit();
@@ -246,32 +246,32 @@ class DbTest extends TestCase
 
         Db::startTrans();
             $data = mockData();
-            Db::name("user")->insertGetId($data);
+            Db::name('user')->insertGetId($data);
         Db::rollback();
         assertEmpty(OperationLog::getLog());
 
         Db::startTrans();
             $data = mockData();
-            $id = Db::name("user")->insertGetId($data);
+            $id = Db::name('user')->insertGetId($data);
             array_unshift($data, $id);
             $log = createLog($data);
 
             Db::startTrans();
                 $data = mockData();
-                Db::name("user")->insertGetId($data);
+                Db::name('user')->insertGetId($data);
             Db::rollback();
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Db::startTrans();
             $data = mockData();
-            $id = Db::name("user")->insertGetId($data);
+            $id = Db::name('user')->insertGetId($data);
             array_unshift($data, $id);
             $log = createLog($data);
 
             Db::startTrans();
                 $data = mockData();
-                $id = Db::name("user")->insertGetId($data);
+                $id = Db::name('user')->insertGetId($data);
                 array_unshift($data, $id);
                 $log .= createLog($data);
             Db::commit();
@@ -280,28 +280,28 @@ class DbTest extends TestCase
 
         Db::startTrans();
             $data = mockData();
-            Db::name("user")->insertGetId($data);
+            Db::name('user')->insertGetId($data);
 
             Db::startTrans();
                 $data = mockData();
-                Db::name("user")->insertGetId($data);
+                Db::name('user')->insertGetId($data);
             Db::commit();
         Db::rollback();
         assertEmpty(OperationLog::getLog());
 
         Db::startTrans();
             $data = mockData();
-            $id = Db::name("user")->insertGetId($data);
+            $id = Db::name('user')->insertGetId($data);
             array_unshift($data, $id);
             $log = createLog($data);
 
             Db::startTrans();
                 $data = mockData();
-                Db::name("user")->insertGetId($data);
+                Db::name('user')->insertGetId($data);
 
                 Db::startTrans();
                     $data = mockData();
-                    Db::name("user")->insertGetId($data);
+                    Db::name('user')->insertGetId($data);
                 Db::commit();
             Db::rollback();
         Db::commit();

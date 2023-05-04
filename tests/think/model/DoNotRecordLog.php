@@ -8,7 +8,5 @@ namespace Chance\Log\Test\think\model;
 
 class DoNotRecordLog extends User
 {
-    protected $name = 'user';
-
     public $doNotRecordLog = true;
 }
