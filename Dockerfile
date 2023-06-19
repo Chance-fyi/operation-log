@@ -1,4 +1,4 @@
-FROM php:8.1.0
+FROM php:8.0
 
 RUN set -x \
     && apt-get update \
