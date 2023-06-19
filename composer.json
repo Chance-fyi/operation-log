@@ -24,13 +24,15 @@
     "phpunit/phpunit": "^10.2@dev",
     "illuminate/database": "^8.0",
     "topthink/think-orm": "2.0.x-dev",
-    "fakerphp/faker": "^1.21@dev"
+    "fakerphp/faker": "^1.21@dev",
+    "friendsofphp/php-cs-fixer": "dev-master"
   },
   "require": {
     "ext-json": "*"
   },
   "scripts": {
-    "test": "./vendor/bin/phpunit"
+    "test": "./vendor/bin/phpunit",
+    "cs-fix": "php-cs-fixer fix $1"
   },
   "bin": [
     "bin/chance-fyi-operation-log"
