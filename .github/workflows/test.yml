@@ -1,0 +1,44 @@
+name: PHPUnit
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [ 8.1 ]
+
+    name: PHP ${{ matrix.php }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Checkout code
+        run: docker compose up -d mysql mysql1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pdo, pdo_mysql
+          ini-values: error_reporting=E_ALL
+          tools: composer:v2
+          coverage: none
+
+      - name: Composer install
+        run: composer install
+
+      - name: Run tests
+        env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: 33060
+          MYSQL1_PORT: 33061
+        run: composer test

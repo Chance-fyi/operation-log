@@ -25,7 +25,8 @@ class TestCase extends BaseTestCase
         $capsule = new Manager();
         $capsule->addConnection([
             "driver" => "mysql",
-            "host" => "mysql",
+            "host" => getenv("MYSQL_HOST") ?: "mysql",
+            "port" => getenv("MYSQL_PORT") ?: 3306,
             "database" => "test",
             "username" => "root",
             "password" => "root",
@@ -35,7 +36,8 @@ class TestCase extends BaseTestCase
         ]);
         $capsule->addConnection([
             "driver" => "mysql",
-            "host" => "mysql1",
+            "host" => getenv("MYSQL_HOST") ?: "mysql1",
+            "port" => getenv("MYSQL1_PORT") ?: 3306,
             "database" => "test1",
             "username" => "root",
             "password" => "root",

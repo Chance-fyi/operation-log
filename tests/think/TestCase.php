@@ -28,7 +28,8 @@ class TestCase extends BaseTestCase
             "connections" => [
                 "mysql" => [
                     "type" => MySqlConnection::class,
-                    "hostname" => "mysql",
+                    "hostname" => getenv("MYSQL_HOST") ?: "mysql",
+                    "hostport" => getenv("MYSQL_PORT") ?: 3306,
                     "database" => "test",
                     "username" => "root",
                     "password" => "root",
@@ -40,7 +41,8 @@ class TestCase extends BaseTestCase
                 ],
                 "default1" => [
                     "type" => MySqlConnection::class,
-                    "hostname" => "mysql1",
+                    "hostname" => getenv("MYSQL_HOST") ?: "mysql1",
+                    "hostport" => getenv("MYSQL1_PORT") ?: 3306,
                     "database" => "test1",
                     "username" => "root",
                     "password" => "root",
