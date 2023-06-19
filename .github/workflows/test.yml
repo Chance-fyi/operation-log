@@ -36,9 +36,18 @@ jobs:
       - name: Composer install
         run: composer install
 
+      - name: Wait for MySQL
+        run: |
+          while ! docker compose exec mysql mysql --user=root --password=root -e "SELECT 1" >/dev/null 2>&1 || ! docker compose exec mysql1 mysql --user=root --password=root -e "SELECT 1" >/dev/null 2>&1; do
+            sleep 1
+          done
+
       - name: Run tests
         env:
           MYSQL_HOST: 127.0.0.1
           MYSQL_PORT: 33060
           MYSQL1_PORT: 33061
         run: composer test
+
+      - name: Close MySQL
+        run: docker compose down
