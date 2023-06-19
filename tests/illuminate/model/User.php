@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/5/4 9:05
+ * Date 2023/5/4 9:05.
  */
 
 namespace Chance\Log\Test\illuminate\model;
@@ -22,9 +22,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class User extends Model
 {
+    public const CREATED_AT = 'create_time';
+    public const UPDATED_AT = 'update_time';
     protected $table = 'user';
-    const CREATED_AT = 'create_time';
-    const UPDATED_AT = 'update_time';
     protected $fillable = ['name', 'phone', 'email', 'sex', 'age', 'json'];
 
     protected function serializeDate(DateTimeInterface $date): string

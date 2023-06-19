@@ -1,15 +1,15 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/5/4 13:25
+ * Date 2023/5/4 13:25.
  */
 
 namespace Chance\Log\Test\illuminate\model;
 
 class Comment extends Connection
 {
-    public $tableComment = '用户';
-    public $columnComment = [
+    public string $tableComment = '用户';
+    public array $columnComment = [
         'name' => '姓名',
         'phone' => '手机号',
         'email' => '邮箱',

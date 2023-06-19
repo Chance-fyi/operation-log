@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2022/10/7 16:19
+ * Date 2022/10/7 16:19.
  */
 
 namespace Chance\Log\orm\think;
@@ -13,7 +13,7 @@ use think\Model;
 
 class Query extends \think\db\Query
 {
-    public function insert(array $data = [], bool $getLastInsID = false)
+    public function insert(array $data = [], bool $getLastInsID = false): int|string
     {
         $result = parent::insert($data, $getLastInsID);
 
@@ -25,7 +25,7 @@ class Query extends \think\db\Query
 
         $model = $this->generateModel();
         $pk = $this->getPk();
-        $data = $data ?: $this->getOptions("data");
+        $data = $data ?: $this->getOptions('data');
         $data[$pk] = $id;
         ThinkOrmLog::created($model, $data);
 
@@ -45,7 +45,7 @@ class Query extends \think\db\Query
     public function update(array $data = []): int
     {
         $model = $this->generateModel();
-        $newData = $data ?: $this->getOptions("data");
+        $newData = $data ?: $this->getOptions('data');
         $field = array_keys($newData);
         $field[] = $model->logKey ?? $model->getPk();
 
@@ -89,14 +89,11 @@ class Query extends \think\db\Query
             }
         }
 
-
         return parent::delete($data);
     }
 
     /**
-     * Notes: 生成Model对象
-     * DateTime: 2022/10/7 16:34
-     * @return Model
+     * Generate model object.
      */
     private function generateModel(): Model
     {
@@ -104,31 +101,32 @@ class Query extends \think\db\Query
             return $this->getModel();
         }
 
-        $database = $this->getConfig("database");
+        $database = $this->getConfig('database');
         $table = $this->getTable();
 
         $mapping = [
             OperationLog::getTableModelMapping(),
-            include __DIR__ . "/../../../cache/table-model-mapping.php",
+            include __DIR__ . '/../../../cache/table-model-mapping.php',
         ];
         foreach ($mapping as $map) {
             if (is_array($map) && isset($map[$database][$table]) && class_exists($map[$database][$table])) {
-                return new $map[$database][$table];
+                return new $map[$database][$table]();
             }
         }
 
         $name = $this->getName();
-        $modelNamespace = $this->getConfig("modelNamespace") ?: "app\model";
-        $className = trim($modelNamespace, "\\") . "\\" . Str::studly($name);
+        $modelNamespace = $this->getConfig('modelNamespace') ?: 'app\\model';
+        $className = trim($modelNamespace, '\\') . '\\' . Str::studly($name);
         if (class_exists($className)) {
-            $model = new $className;
+            $model = new $className();
         } else {
             $model = new DbModel($name);
             $model->table($table);
             $model->setQuery($this);
-            $model->logKey = $this->getConfig("logKey") ?: $model->getPk();
+            $model->logKey = $this->getConfig('logKey') ?: $model->getPk();
             $model->pk($this->getPk());
         }
+
         return $model;
     }
 }

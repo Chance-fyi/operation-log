@@ -21,6 +21,7 @@ function createLog(array $data, $batch = false): string
         $val = is_array($val) ? json_encode($val, JSON_UNESCAPED_UNICODE) : $val;
         $log .= (columnComment[$key] ?? $key) . "：{$val}，";
     }
+
     return mb_substr($log, 0, mb_strlen($log, 'utf8') - 1, 'utf8') . PHP_EOL;
 }
 
@@ -30,6 +31,7 @@ function batchCreateLog(array $data): string
     foreach ($data as $datum) {
         $log .= createLog($datum, true);
     }
+
     return trim($log);
 }
 
@@ -45,8 +47,9 @@ function updateLog(array $old, array $new, $batch = false): string
     }
 
     foreach ($diffKeys as $key) {
-        $log .= (columnComment[$key] ?? $key) . "由：$old[$key] 改为：$new[$key]，";
+        $log .= (columnComment[$key] ?? $key) . "由：{$old[$key]} 改为：{$new[$key]}，";
     }
+
     return mb_substr($log, 0, mb_strlen($log, 'utf8') - 1, 'utf8') . PHP_EOL;
 }
 
@@ -56,6 +59,7 @@ function batchUpdateLog(array $old, array $new): string
     foreach ($old as $item) {
         $log .= updateLog($item, $new, true);
     }
+
     return $log;
 }
 
@@ -69,6 +73,7 @@ function deleteLog($data, $batch = false): string
     foreach ($data as $key => $val) {
         $log .= (columnComment[$key] ?? $key) . "：{$val}，";
     }
+
     return mb_substr($log, 0, mb_strlen($log, 'utf8') - 1, 'utf8') . PHP_EOL;
 }
 
@@ -78,6 +83,7 @@ function batchDeleteLog($data): string
     foreach ($data as $item) {
         $log .= deleteLog($item, true);
     }
+
     return $log;
 }
 
@@ -99,7 +105,7 @@ function mockDatas(): array
     return [
         mockData(),
         mockData(),
-        mockData()
+        mockData(),
     ];
 }
 

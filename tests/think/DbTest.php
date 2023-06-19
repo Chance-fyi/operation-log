@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/4/26 11:26
+ * Date 2023/4/26 11:26.
  */
 
 namespace Chance\Log\Test\think;
@@ -11,9 +11,15 @@ use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\facade\Db;
+
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class DbTest extends TestCase
 {
     public function testCreated()
@@ -183,7 +189,7 @@ class DbTest extends TestCase
         $old['json->name'] = json_decode($old['json'], true)['name'];
         $new = mockData();
         $new = [
-            'json->name' => $new['name']
+            'json->name' => $new['name'],
         ];
         Db::name('user')->where('id', $id)->update($new);
         $log .= updateLog($old, $new);
@@ -200,23 +206,23 @@ class DbTest extends TestCase
     {
         $old = Db::name('user')->order('id')->find();
         Db::name('user')->where('id', $old['id'])->inc('age')->update();
-        $log = updateLog((array)$old, ['age' => '["INC",1]']);
+        $log = updateLog((array) $old, ['age' => '["INC",1]']);
 
         $old = Db::name('user')->order('id')->find();
         Db::name('user')->where('id', $old['id'])->inc('age', 5)->update();
-        $log .= updateLog((array)$old, ['age' => '["INC",5]']);
+        $log .= updateLog((array) $old, ['age' => '["INC",5]']);
 
         $old = Db::name('user')->order('id')->find();
         Db::name('user')->where('id', $old['id'])->dec('age')->update();
-        $log .= updateLog((array)$old, ['age' => '["DEC",1]']);
+        $log .= updateLog((array) $old, ['age' => '["DEC",1]']);
 
         $old = Db::name('user')->order('id')->find();
         Db::name('user')->where('id', $old['id'])->dec('age', 5)->update();
-        $log .= updateLog((array)$old, ['age' => '["DEC",5]']);
+        $log .= updateLog((array) $old, ['age' => '["DEC",5]']);
 
         $old = Db::name('user')->order('id')->find();
         Db::name('user')->where('id', $old['id'])->update(['age' => Db::raw('age - 1')]);
-        $log .= updateLog((array)$old, ['age' => 'age - 1']);
+        $log .= updateLog((array) $old, ['age' => 'age - 1']);
 
         assertEquals(OperationLog::getLog(), trim($log));
     }
@@ -239,73 +245,73 @@ class DbTest extends TestCase
     public function testTransaction()
     {
         Db::startTrans();
-            $data = mockData();
-            $id = Db::name('user')->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $id = Db::name('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Db::startTrans();
-            $data = mockData();
-            Db::name('user')->insertGetId($data);
+        $data = mockData();
+        Db::name('user')->insertGetId($data);
         Db::rollback();
         assertEmpty(OperationLog::getLog());
 
         Db::startTrans();
-            $data = mockData();
-            $id = Db::name('user')->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $id = Db::name('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
 
-            Db::startTrans();
-                $data = mockData();
-                Db::name('user')->insertGetId($data);
-            Db::rollback();
+        Db::startTrans();
+        $data = mockData();
+        Db::name('user')->insertGetId($data);
+        Db::rollback();
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Db::startTrans();
-            $data = mockData();
-            $id = Db::name('user')->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $id = Db::name('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
 
-            Db::startTrans();
-                $data = mockData();
-                $id = Db::name('user')->insertGetId($data);
-                array_unshift($data, $id);
-                $log .= createLog($data);
-            Db::commit();
+        Db::startTrans();
+        $data = mockData();
+        $id = Db::name('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log .= createLog($data);
+        Db::commit();
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Db::startTrans();
-            $data = mockData();
-            Db::name('user')->insertGetId($data);
+        $data = mockData();
+        Db::name('user')->insertGetId($data);
 
-            Db::startTrans();
-                $data = mockData();
-                Db::name('user')->insertGetId($data);
-            Db::commit();
+        Db::startTrans();
+        $data = mockData();
+        Db::name('user')->insertGetId($data);
+        Db::commit();
         Db::rollback();
         assertEmpty(OperationLog::getLog());
 
         Db::startTrans();
-            $data = mockData();
-            $id = Db::name('user')->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $id = Db::name('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
 
-            Db::startTrans();
-                $data = mockData();
-                Db::name('user')->insertGetId($data);
+        Db::startTrans();
+        $data = mockData();
+        Db::name('user')->insertGetId($data);
 
-                Db::startTrans();
-                    $data = mockData();
-                    Db::name('user')->insertGetId($data);
-                Db::commit();
-            Db::rollback();
+        Db::startTrans();
+        $data = mockData();
+        Db::name('user')->insertGetId($data);
+        Db::commit();
+        Db::rollback();
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
     }

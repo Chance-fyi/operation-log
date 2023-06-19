@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/4/28 10:42
+ * Date 2023/4/28 10:42.
  */
 
 namespace Chance\Log\Test\think;
@@ -17,9 +17,15 @@ use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\facade\Db;
+
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ModelTest extends TestCase
 {
     public function testCreated()
@@ -128,8 +134,8 @@ class ModelTest extends TestCase
         $new = mockData();
         $user = User::update($new, [['id', '<=', 5]]);
         $log = implode(PHP_EOL, array_map(function ($l, $k) use ($old, $user) {
-                return trim($l) . sprintf('，update_time由：%s 改为：%s', $old[$k]['update_time'], $user->update_time);
-            }, array_filter(explode(PHP_EOL, batchUpdateLog($old, $new))), array_keys($old))) . PHP_EOL;
+            return trim($l) . sprintf('，update_time由：%s 改为：%s', $old[$k]['update_time'], $user->update_time);
+        }, array_filter(explode(PHP_EOL, batchUpdateLog($old, $new))), array_keys($old))) . PHP_EOL;
 
         $old = User::where('id', '<=', 5)->select()->toArray();
         $new = mockData();
@@ -243,7 +249,7 @@ class ModelTest extends TestCase
         $old['json->name'] = json_decode($old['json'], true)['name'];
         $new = mockData();
         $new = [
-            'json->name' => $new['name']
+            'json->name' => $new['name'],
         ];
         $user = clone $model;
         $user->where('id', $id)->update($new);
@@ -305,84 +311,84 @@ class ModelTest extends TestCase
     public function testTransaction()
     {
         Db::startTrans();
-            $data = mockData();
-            $user = new User();
-            $id = $user->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $user = new User();
+        $id = $user->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Db::startTrans();
-            $data = mockData();
-            $user = new User();
-            $user->insertGetId($data);
+        $data = mockData();
+        $user = new User();
+        $user->insertGetId($data);
         Db::rollback();
         assertEmpty(OperationLog::getLog());
 
         Db::startTrans();
-            $data = mockData();
-            $user = new User();
-            $id = $user->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $user = new User();
+        $id = $user->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
 
-            Db::startTrans();
-                $data = mockData();
-                $user = new User();
-                $user->insertGetId($data);
-            Db::rollback();
+        Db::startTrans();
+        $data = mockData();
+        $user = new User();
+        $user->insertGetId($data);
+        Db::rollback();
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Db::startTrans();
-            $data = mockData();
-            $user = new User();
-            $id = $user->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $user = new User();
+        $id = $user->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
 
-            Db::startTrans();
-                $data = mockData();
-                $user = new User();
-                $id = $user->insertGetId($data);
-                array_unshift($data, $id);
-                $log .= createLog($data);
-            Db::commit();
+        Db::startTrans();
+        $data = mockData();
+        $user = new User();
+        $id = $user->insertGetId($data);
+        array_unshift($data, $id);
+        $log .= createLog($data);
+        Db::commit();
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Db::startTrans();
-            $data = mockData();
-            $user = new User();
-            $user->insertGetId($data);
+        $data = mockData();
+        $user = new User();
+        $user->insertGetId($data);
 
-            Db::startTrans();
-                $data = mockData();
-                $user = new User();
-                $user->insertGetId($data);
-            Db::commit();
+        Db::startTrans();
+        $data = mockData();
+        $user = new User();
+        $user->insertGetId($data);
+        Db::commit();
         Db::rollback();
         assertEmpty(OperationLog::getLog());
 
         Db::startTrans();
-            $data = mockData();
-            $user = new User();
-            $id = $user->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $user = new User();
+        $id = $user->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
 
-            Db::startTrans();
-                $data = mockData();
-                $user = new User();
-                $user->insertGetId($data);
+        Db::startTrans();
+        $data = mockData();
+        $user = new User();
+        $user->insertGetId($data);
 
-                Db::startTrans();
-                    $data = mockData();
-                    $user = new User();
-                    $user->insertGetId($data);
-                Db::commit();
-            Db::rollback();
+        Db::startTrans();
+        $data = mockData();
+        $user = new User();
+        $user->insertGetId($data);
+        Db::commit();
+        Db::rollback();
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
     }
@@ -424,13 +430,13 @@ class ModelTest extends TestCase
 
         $old = User::order('id')->find()->toArray();
         $new = mockData();
-        $new['sex'] = (int)!$new['sex'];
+        $new['sex'] = (int) !$new['sex'];
         $user = new User();
         $user->where('id', $old['id'])->update($new);
         $log .= updateLog($old, $new);
 
         $old = User::order('id')->find($old['id'])->toArray();
-        $new['sex'] = (int)!$new['sex'];
+        $new['sex'] = (int) !$new['sex'];
         $user = new Attribute();
         $user->where('id', $old['id'])->update($new);
         $old['sex'] = $user->getSexTextAttr($old['sex']);
@@ -477,8 +483,8 @@ class ModelTest extends TestCase
 
         $mapping = [
             'test' => [
-                'tb_user' => 'Chance\Log\Test\think\model\Attribute'
-            ]
+                'tb_user' => 'Chance\Log\Test\think\model\Attribute',
+            ],
         ];
         OperationLog::setTableModelMapping($mapping);
         assertEquals(OperationLog::getTableModelMapping(), $mapping);

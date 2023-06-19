@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2022/10/8 9:56
+ * Date 2022/10/8 9:56.
  */
 
 namespace Chance\Log\orm\illuminate;
@@ -48,7 +48,7 @@ class Builder extends \Illuminate\Database\Query\Builder
             if (count($oldData) > 1) {
                 IlluminateOrmLog::batchUpdated($model, $oldData, $values);
             } else {
-                IlluminateOrmLog::updated($model, (array)$oldData[0], $values);
+                IlluminateOrmLog::updated($model, (array) $oldData[0], $values);
             }
         }
 
@@ -62,16 +62,14 @@ class Builder extends \Illuminate\Database\Query\Builder
         return parent::delete($id);
     }
 
-    public function truncate()
+    public function truncate(): void
     {
         $this->deleteLog();
         parent::truncate();
     }
 
     /**
-     * Notes: 生成Model对象
-     * DateTime: 2022/10/8 10:22
-     * @return Model
+     * Generate model object.
      */
     private function generateModel(): Model
     {
@@ -81,35 +79,34 @@ class Builder extends \Illuminate\Database\Query\Builder
 
         $mapping = [
             OperationLog::getTableModelMapping(),
-            include __DIR__ . "/../../../cache/table-model-mapping.php",
+            include __DIR__ . '/../../../cache/table-model-mapping.php',
         ];
         foreach ($mapping as $map) {
             if (is_array($map) && isset($map[$database][$table]) && class_exists($map[$database][$table])) {
-                return new $map[$database][$table];
+                return new $map[$database][$table]();
             }
         }
 
-        $modelNamespace = $this->getConnection()->getConfig("modelNamespace") ?: "app\model";
-        $className = trim($modelNamespace, "\\") . "\\" . Str::studly($name);
+        $modelNamespace = $this->getConnection()->getConfig('modelNamespace') ?: 'app\\model';
+        $className = trim($modelNamespace, '\\') . '\\' . Str::studly($name);
         if (class_exists($className)) {
-            $model = new $className;
+            $model = new $className();
         } else {
             $model = new DbModel();
             $model->setQuery($this->getConnection());
             $model->setTable($name);
-            $model->logKey = $this->getConnection()->getConfig("logKey") ?: $model->getKeyName();
+            $model->logKey = $this->getConnection()->getConfig('logKey') ?: $model->getKeyName();
         }
+
         return $model;
     }
 
-    private function insertLog(array $values)
+    private function insertLog(array $values): void
     {
         $model = $this->generateModel();
         if (is_array(reset($values))) {
-            // 多条插入
             IlluminateOrmLog::batchCreated($model, $values);
         } else {
-            // 单条插入
             $id = $this->getConnection()->getPdo()->lastInsertId();
             $pk = $model->getKeyName();
             $values[$pk] = $id;
@@ -117,10 +114,10 @@ class Builder extends \Illuminate\Database\Query\Builder
         }
     }
 
-    private function deleteLog($id = null)
+    private function deleteLog($id = null): void
     {
         if (!empty($id)) {
-            $data = [(array)$this->find($id)];
+            $data = [(array) $this->find($id)];
         } else {
             $data = $this->get()->toArray();
         }
@@ -130,7 +127,7 @@ class Builder extends \Illuminate\Database\Query\Builder
             if (count($data) > 1) {
                 IlluminateOrmLog::batchDeleted($model, $data);
             } else {
-                IlluminateOrmLog::deleted($model, (array)$data[0]);
+                IlluminateOrmLog::deleted($model, (array) $data[0]);
             }
         }
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2022/10/7 11:44
+ * Date 2022/10/7 11:44.
  */
 
 namespace Chance\Log\orm\think;
@@ -11,11 +11,10 @@ use think\Model;
 
 class DbModel extends Model
 {
-    // 日志记录的主键名称
-    public $logKey = "id";
+    // The primary key name of the log record
+    public string $logKey = 'id';
 
-    /** @var Query $query */
-    private $query;
+    private Query $query;
 
     public function __construct(string $name, array $data = [])
     {
@@ -23,7 +22,7 @@ class DbModel extends Model
         parent::__construct($data);
     }
 
-    public function setQuery(Query $query)
+    public function setQuery(Query $query): void
     {
         $this->query = $query;
     }

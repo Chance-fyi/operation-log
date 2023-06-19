@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2022/3/9 11:18
+ * Date 2022/3/9 11:18.
  */
 
 namespace Chance\Log\orm\think;
@@ -15,9 +15,7 @@ use think\Model;
 class Log extends OperationLog implements OperationLogInterface
 {
     /**
-     * DateTime: 2022/10/8 10:56
      * @param Model $model
-     * @return string
      */
     public function getPk($model): string
     {
@@ -26,7 +24,6 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * @param Model $model
-     * @return string
      */
     public function getTableName($model): string
     {
@@ -35,33 +32,30 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * @param Model $model
-     * @return string
      */
     public function getDatabaseName($model): string
     {
-        if (method_exists($model, "getQuery")) {
-            return $model->getQuery()->getConfig("database");
+        if (method_exists($model, 'getQuery')) {
+            return $model->getQuery()->getConfig('database');
         }
-        return $model->getConfig("database");
+
+        return $model->getConfig('database');
     }
 
     /**
-     * DateTime: 2022/10/9 13:06
      * @param Model $model
-     * @param string $sql
-     * @return mixed
      */
-    public function executeSQL($model, string $sql)
+    public function executeSQL($model, string $sql): mixed
     {
-        if (method_exists($model, "getQuery")) {
+        if (method_exists($model, 'getQuery')) {
             return $model->getQuery()->getConnection()->query($sql);
         }
+
         return $model->db()->getConnection()->query($sql);
     }
 
     /**
      * @param Model $model
-     * @return array
      */
     public function getAttributes($model): array
     {
@@ -70,7 +64,6 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * @param Model $model
-     * @return array
      */
     public function getChangedAttributes($model): array
     {
@@ -79,64 +72,57 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * @param Model $model
-     * @param string $key
-     * @return string
      */
     public function getValue($model, string $key): string
     {
-        $keyText = $key . "_text";
-        $value = $model->$keyText ?? $model->$key;
+        $keyText = $key . '_text';
+        $value = $model->{$keyText} ?? $model->{$key};
 
         if ($value instanceof Raw) {
             return $value->getValue();
-        } elseif (is_array($value) || is_object($value)) {
-            return json_encode($value, JSON_UNESCAPED_UNICODE);
-        } else {
-            return (string)$value;
         }
+        if (is_array($value) || is_object($value)) {
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
+        }
+
+        return (string) $value;
     }
 
     /**
      * @param Model $model
-     * @param string $key
-     * @return string
      */
     public function getOldValue($model, string $key): string
     {
-        if (strpos($key, "->") !== false) {
-            $value = $model->getOrigin(vsprintf("json_extract(`json`, '$.name')", explode("->", $key, 2)));
+        if (str_contains($key, '->')) {
+            $value = $model->getOrigin(vsprintf("json_extract(`json`, '$.name')", explode('->', $key, 2)));
+
             return trim($value, '"');
         }
 
-        $keyText = $key . "_text";
-        $attributeFun = "get" . Str::studly(Str::lower($keyText)) . "Attr";
-        $value = method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOrigin($key)) : $model->getOrigin($key);
+        $keyText = $key . '_text';
+        $attributeFun = 'get' . Str::studly(Str::lower($keyText)) . 'Attr';
+        $value = method_exists($model, $attributeFun) ? $model->{$attributeFun}($model->getOrigin($key)) : $model->getOrigin($key);
 
         if (is_array($value) || is_object($value)) {
             return json_encode($value, JSON_UNESCAPED_UNICODE);
-        } else {
-            return (string)$value;
         }
+
+        return (string) $value;
     }
 
     /**
-     * DateTime: 2022/10/7 18:10
-     * @param $model
-     * @param array $data
+     * @param Model $model
      */
-    public function created($model, array $data)
+    public function created($model, array $data): void
     {
         $model->setAttrs($data);
         $this->generateLog($model, self::CREATED);
     }
 
     /**
-     * DateTime: 2022/10/7 18:10
      * @param Model $model
-     * @param array $oldData
-     * @param array $data
      */
-    public function updated($model, array $oldData, array $data)
+    public function updated($model, array $oldData, array $data): void
     {
         $model->setAttrs($oldData);
         $model->refreshOrigin();
@@ -145,22 +131,18 @@ class Log extends OperationLog implements OperationLogInterface
     }
 
     /**
-     * DateTime: 2022/10/7 18:10
      * @param Model $model
-     * @param array $data
      */
-    public function deleted($model, array $data)
+    public function deleted($model, array $data): void
     {
         $model->setAttrs($data);
         $this->generateLog($model, self::DELETED);
     }
 
     /**
-     * DateTime: 2022/10/7 18:11
      * @param Model $model
-     * @param array $data
      */
-    public function batchCreated($model, array $data)
+    public function batchCreated($model, array $data): void
     {
         foreach ($data as $item) {
             $model->setAttrs($item);
@@ -169,12 +151,9 @@ class Log extends OperationLog implements OperationLogInterface
     }
 
     /**
-     * DateTime: 2022/10/7 18:11
      * @param Model $model
-     * @param array $oldData
-     * @param array $data
      */
-    public function batchUpdated($model, array $oldData, array $data)
+    public function batchUpdated($model, array $oldData, array $data): void
     {
         foreach ($oldData as $item) {
             $model->setAttrs($item);
@@ -185,11 +164,9 @@ class Log extends OperationLog implements OperationLogInterface
     }
 
     /**
-     * DateTime: 2022/10/7 18:11
      * @param Model $model
-     * @param array $data
      */
-    public function batchDeleted($model, array $data)
+    public function batchDeleted($model, array $data): void
     {
         foreach ($data as $item) {
             $model->setAttrs($item);

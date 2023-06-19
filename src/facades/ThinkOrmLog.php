@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2022/10/6 15:14
+ * Date 2022/10/6 15:14.
  */
 
 namespace Chance\Log\facades;

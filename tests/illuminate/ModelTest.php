@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/5/4 9:04
+ * Date 2023/5/4 9:04.
  */
 
 namespace Chance\Log\Test\illuminate;
@@ -15,9 +15,15 @@ use Chance\Log\Test\illuminate\model\IgnoreLogFields;
 use Chance\Log\Test\illuminate\model\Timestamps;
 use Chance\Log\Test\illuminate\model\User;
 use Illuminate\Database\Capsule\Manager;
+
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ModelTest extends TestCase
 {
     public function testCreated()
@@ -36,6 +42,7 @@ class ModelTest extends TestCase
         $log = createLog($data);
 
         $data = mockData();
+
         /** @var User $user */
         $user = User::query()->create($data);
         array_unshift($data, $user->id);
@@ -48,7 +55,7 @@ class ModelTest extends TestCase
 
     public function testBatchCreated()
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $data = mockData();
             User::query()->create($data);
         }
@@ -59,6 +66,7 @@ class ModelTest extends TestCase
     public function testUpdated()
     {
         $new = mockData();
+
         /** @var User $user */
         $user = User::query()->find(1);
         $old = $user->toArray();
@@ -84,9 +92,10 @@ class ModelTest extends TestCase
         $new = mockData();
         User::query()->where('id', '<=', 5)->update($new);
         $log = implode(PHP_EOL, array_map(function ($l, $k) use ($old) {
-                $time = $old[$k]['update_time'];
-                return trim($l) . sprintf('，update_time由：%s 改为：%s', $time, $time);
-            }, array_filter(explode(PHP_EOL, batchUpdateLog($old, $new))), array_keys($old))) . PHP_EOL;
+            $time = $old[$k]['update_time'];
+
+            return trim($l) . sprintf('，update_time由：%s 改为：%s', $time, $time);
+        }, array_filter(explode(PHP_EOL, batchUpdateLog($old, $new))), array_keys($old))) . PHP_EOL;
 
         assertEquals(OperationLog::getLog(), trim($log));
     }
@@ -124,6 +133,7 @@ class ModelTest extends TestCase
     {
         $data = mockData();
         $data['json'] = json_encode($data, JSON_UNESCAPED_UNICODE);
+
         /** @var Timestamps $user */
         $user = Timestamps::query()->create($data);
         $id = $user->id;
@@ -134,13 +144,14 @@ class ModelTest extends TestCase
         $old['json->name'] = json_decode($old['json'], true)['name'];
         $new = mockData();
         $new = [
-            'json->name' => $new['name']
+            'json->name' => $new['name'],
         ];
         Timestamps::query()->where('id', $id)->update($new);
         $log .= updateLog($old, $new);
 
         $data = mockData();
         $data['json'] = json_encode(['data' => $data], JSON_UNESCAPED_UNICODE);
+
         /** @var Timestamps $user */
         $user = Timestamps::query()->create($data);
         $id = $user->id;
@@ -151,7 +162,7 @@ class ModelTest extends TestCase
         $old['json->data->name'] = json_decode($old['json'], true)['data']['name'];
         $new = mockData();
         $new = [
-            'json->data->name' => $new['name']
+            'json->data->name' => $new['name'],
         ];
         Timestamps::query()->where('id', $id)->update($new);
         $log .= updateLog($old, $new);
@@ -189,12 +200,14 @@ class ModelTest extends TestCase
     public function testMultipleDatabases()
     {
         $data = mockData();
+
         /** @var Timestamps $user */
         $user = Timestamps::query()->create($data);
         array_unshift($data, $user->id);
         $log = createLog($data);
 
         $data = mockData();
+
         /** @var Connection $user */
         $user = Connection::query()->create($data);
         array_unshift($data, $user->id);
@@ -206,78 +219,83 @@ class ModelTest extends TestCase
     public function testTransaction()
     {
         Manager::beginTransaction();
-            $data = mockData();
-            /** @var Timestamps $user */
-            $user = Timestamps::query()->create($data);
-            array_unshift($data, $user->id);
-            $log = createLog($data);
+        $data = mockData();
+
+        /** @var Timestamps $user */
+        $user = Timestamps::query()->create($data);
+        array_unshift($data, $user->id);
+        $log = createLog($data);
         Manager::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Manager::beginTransaction();
-            $data = mockData();
-            Timestamps::query()->create($data);
+        $data = mockData();
+        Timestamps::query()->create($data);
         Manager::rollback();
         assertEmpty(OperationLog::getLog());
 
         Manager::beginTransaction();
-            $data = mockData();
-            /** @var Timestamps $user */
-            $user = Timestamps::query()->create($data);
-            array_unshift($data, $user->id);
-            $log = createLog($data);
+        $data = mockData();
 
-            Manager::beginTransaction();
-                $data = mockData();
-                Timestamps::query()->create($data);
-            Manager::rollback();
+        /** @var Timestamps $user */
+        $user = Timestamps::query()->create($data);
+        array_unshift($data, $user->id);
+        $log = createLog($data);
+
+        Manager::beginTransaction();
+        $data = mockData();
+        Timestamps::query()->create($data);
+        Manager::rollback();
         Manager::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Manager::beginTransaction();
-            $data = mockData();
-            /** @var Timestamps $user */
-            $user = Timestamps::query()->create($data);
-            array_unshift($data, $user->id);
-            $log = createLog($data);
+        $data = mockData();
 
-            Manager::beginTransaction();
-                $data = mockData();
-                /** @var Timestamps $user */
-                $user = Timestamps::query()->create($data);
-                array_unshift($data, $user->id);
-                $log .= createLog($data);
-            Manager::commit();
+        /** @var Timestamps $user */
+        $user = Timestamps::query()->create($data);
+        array_unshift($data, $user->id);
+        $log = createLog($data);
+
+        Manager::beginTransaction();
+        $data = mockData();
+
+        /** @var Timestamps $user */
+        $user = Timestamps::query()->create($data);
+        array_unshift($data, $user->id);
+        $log .= createLog($data);
+        Manager::commit();
         Manager::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Manager::beginTransaction();
-            $data = mockData();
-            Timestamps::query()->create($data);
+        $data = mockData();
+        Timestamps::query()->create($data);
 
-            Manager::beginTransaction();
-                $data = mockData();
-                Timestamps::query()->create($data);
-            Manager::commit();
+        Manager::beginTransaction();
+        $data = mockData();
+        Timestamps::query()->create($data);
+        Manager::commit();
         Manager::rollback();
         assertEmpty(OperationLog::getLog());
 
         Manager::beginTransaction();
-            $data = mockData();
-            /** @var Timestamps $user */
-            $user = Timestamps::query()->create($data);
-            array_unshift($data, $user->id);
-            $log = createLog($data);
+        $data = mockData();
 
-            Manager::beginTransaction();
-                $data = mockData();
-                Timestamps::query()->create($data);
+        /** @var Timestamps $user */
+        $user = Timestamps::query()->create($data);
+        array_unshift($data, $user->id);
+        $log = createLog($data);
 
-                Manager::beginTransaction();
-                    $data = mockData();
-                    Timestamps::query()->create($data);
-                Manager::commit();
-            Manager::rollback();
+        Manager::beginTransaction();
+        $data = mockData();
+        Timestamps::query()->create($data);
+
+        Manager::beginTransaction();
+        $data = mockData();
+        Timestamps::query()->create($data);
+        Manager::commit();
+        Manager::rollback();
         Manager::commit();
         assertEquals(OperationLog::getLog(), trim($log));
     }
@@ -286,11 +304,12 @@ class ModelTest extends TestCase
     {
         $mapping = [
             'test1' => [
-                'tb_user' => 'Chance\Log\Test\illuminate\model\Comment'
-            ]
+                'tb_user' => 'Chance\Log\Test\illuminate\model\Comment',
+            ],
         ];
 
         $data = mockData();
+
         /** @var Comment $user */
         $user = Comment::query()->create($data);
         array_unshift($data, $user->id);
@@ -298,6 +317,7 @@ class ModelTest extends TestCase
 
         OperationLog::setTableModelMapping($mapping);
         $data = mockData();
+
         /** @var Comment $user */
         $user = Comment::query()->create($data);
         array_unshift($data, $user->id);
@@ -311,11 +331,12 @@ class ModelTest extends TestCase
     {
         $mapping = [
             'test' => [
-                'tb_user' => 'Chance\Log\Test\illuminate\model\Attribute'
-            ]
+                'tb_user' => 'Chance\Log\Test\illuminate\model\Attribute',
+            ],
         ];
 
         $data = mockData();
+
         /** @var Timestamps $user */
         $user = Timestamps::query()->create($data);
         array_unshift($data, $user->id);
@@ -323,6 +344,7 @@ class ModelTest extends TestCase
 
         OperationLog::setTableModelMapping($mapping);
         $data = mockData();
+
         /** @var Attribute $user */
         $user = Attribute::query()->create($data);
         array_unshift($data, $user->id);
@@ -332,13 +354,13 @@ class ModelTest extends TestCase
 
         $old = Timestamps::query()->first()->toArray();
         $new = mockData();
-        $new['sex'] = (int)!$new['sex'];
+        $new['sex'] = (int) !$new['sex'];
         Timestamps::query()->where('id', $old['id'])->update($new);
         $log .= updateLog($old, $new);
 
         OperationLog::setTableModelMapping($mapping);
         $old = Timestamps::query()->first()->toArray();
-        $new['sex'] = (int)!$new['sex'];
+        $new['sex'] = (int) !$new['sex'];
         Attribute::query()->where('id', $old['id'])->update($new);
         $user = new Attribute();
         $old['sex'] = $user->getSexTextAttribute($old['sex']);
@@ -353,11 +375,12 @@ class ModelTest extends TestCase
     {
         $mapping = [
             'test' => [
-                'tb_user' => 'Chance\Log\Test\illuminate\model\IgnoreLogFields'
-            ]
+                'tb_user' => 'Chance\Log\Test\illuminate\model\IgnoreLogFields',
+            ],
         ];
 
         $data = mockData();
+
         /** @var IgnoreLogFields $user */
         $user = IgnoreLogFields::query()->create($data);
         array_unshift($data, $user->id);
@@ -367,6 +390,7 @@ class ModelTest extends TestCase
 
         OperationLog::setTableModelMapping($mapping);
         $data = mockData();
+
         /** @var IgnoreLogFields $user */
         $user = IgnoreLogFields::query()->create($data);
         array_unshift($data, $user->id);
@@ -380,8 +404,8 @@ class ModelTest extends TestCase
     {
         OperationLog::setTableModelMapping([
             'test' => [
-                'tb_user' => 'Chance\Log\Test\illuminate\model\DoNotRecordLog'
-            ]
+                'tb_user' => 'Chance\Log\Test\illuminate\model\DoNotRecordLog',
+            ],
         ]);
         $data = mockData();
         DoNotRecordLog::query()->create($data);
@@ -394,8 +418,8 @@ class ModelTest extends TestCase
     {
         $mapping = [
             'test' => [
-                'tb_user' => 'Chance\Log\Test\illuminate\model\DoNotRecordLog'
-            ]
+                'tb_user' => 'Chance\Log\Test\illuminate\model\DoNotRecordLog',
+            ],
         ];
         OperationLog::setTableModelMapping($mapping);
         assertEquals(OperationLog::getTableModelMapping(), $mapping);

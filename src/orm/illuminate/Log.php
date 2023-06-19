@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm
  * IUser Chance
- * Date 2021/12/31 11:10
+ * Date 2021/12/31 11:10.
  */
 
 namespace Chance\Log\orm\illuminate;
@@ -15,9 +15,7 @@ use Illuminate\Support\Str;
 class Log extends OperationLog implements OperationLogInterface
 {
     /**
-     * DateTime: 2022/10/8 10:58
      * @param Model $model
-     * @return string
      */
     public function getPk($model): string
     {
@@ -26,7 +24,6 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * @param Model $model
-     * @return string
      */
     public function getTableName($model): string
     {
@@ -35,33 +32,30 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * @param Model $model
-     * @return string
      */
     public function getDatabaseName($model): string
     {
-        if (method_exists($model, "getQuery")) {
+        if (method_exists($model, 'getQuery')) {
             return $model->getQuery()->getDatabaseName();
         }
+
         return $model->getConnection()->getDatabaseName();
     }
 
     /**
-     * DateTime: 2022/10/9 13:15
      * @param Model $model
-     * @param string $sql
-     * @return array
      */
     public function executeSQL($model, string $sql): array
     {
-        if (method_exists($model, "getQuery")) {
+        if (method_exists($model, 'getQuery')) {
             return $model->getQuery()->select($sql);
         }
+
         return $model->getConnection()->select($sql);
     }
 
     /**
      * @param Model $model
-     * @return array
      */
     public function getAttributes($model): array
     {
@@ -70,7 +64,6 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * @param Model $model
-     * @return array
      */
     public function getChangedAttributes($model): array
     {
@@ -79,66 +72,57 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * @param Model $model
-     * @param string $key
-     * @return string
      */
     public function getValue($model, string $key): string
     {
-        $keyText = $key . "_text";
-        $value = $model->$keyText ?? $model->$key;
+        $keyText = $key . '_text';
+        $value = $model->{$keyText} ?? $model->{$key};
 
         if (is_array($value)) {
             return json_encode($value, JSON_UNESCAPED_UNICODE);
-        } else {
-            return (string)$value;
         }
+
+        return (string) $value;
     }
 
     /**
      * @param Model $model
-     * @param string $key
-     * @return string
      */
     public function getOldValue($model, string $key): string
     {
-        if (strpos($key, "->") !== false) {
-            [$key, $jsonKey] = explode("->", $key, 2);
+        if (str_contains($key, '->')) {
+            [$key, $jsonKey] = explode('->', $key, 2);
         }
 
-        $keyText = $key . "_text";
-        $attributeFun = "get" . Str::studly(Str::lower($keyText)) . "Attribute";
-        $value = (string)(method_exists($model, $attributeFun) ? $model->$attributeFun($model->getOriginal($key)) : $model->getOriginal($key));
+        $keyText = $key . '_text';
+        $attributeFun = 'get' . Str::studly(Str::lower($keyText)) . 'Attribute';
+        $value = (string) (method_exists($model, $attributeFun) ? $model->{$attributeFun}($model->getOriginal($key)) : $model->getOriginal($key));
 
         $val = json_decode($value, true);
         if (!isset($jsonKey) || is_null($val) || !is_array($val)) {
             return $value;
         }
 
-        foreach (explode("->", $jsonKey) as $k) {
+        foreach (explode('->', $jsonKey) as $k) {
             $val = $val[$k];
         }
 
-        return (string)$val;
+        return (string) $val;
     }
 
     /**
-     * DateTime: 2022/10/8 11:22
      * @param Model $model
-     * @param array $data
      */
-    public function created($model, array $data)
+    public function created($model, array $data): void
     {
         $model->setRawAttributes($data);
         $this->generateLog($model, self::CREATED);
     }
 
     /**
-     * DateTime: 2022/10/8 11:22
      * @param Model $model
-     * @param array $oldData
-     * @param array $data
      */
-    public function updated($model, array $oldData, array $data)
+    public function updated($model, array $oldData, array $data): void
     {
         $model->setRawAttributes($oldData, true);
         $model->setRawAttributes(array_merge($oldData, $data));
@@ -147,22 +131,18 @@ class Log extends OperationLog implements OperationLogInterface
     }
 
     /**
-     * DateTime: 2022/10/8 11:22
      * @param Model $model
-     * @param array $data
      */
-    public function deleted($model, array $data)
+    public function deleted($model, array $data): void
     {
         $model->setRawAttributes($data);
         $this->generateLog($model, self::DELETED);
     }
 
     /**
-     * DateTime: 2022/10/8 11:22
      * @param Model $model
-     * @param array $data
      */
-    public function batchCreated($model, array $data)
+    public function batchCreated($model, array $data): void
     {
         foreach ($data as $item) {
             $model->setRawAttributes($item);
@@ -171,30 +151,25 @@ class Log extends OperationLog implements OperationLogInterface
     }
 
     /**
-     * DateTime: 2022/10/8 11:22
      * @param Model $model
-     * @param array $oldData
-     * @param array $data
      */
-    public function batchUpdated($model, array $oldData, array $data)
+    public function batchUpdated($model, array $oldData, array $data): void
     {
         foreach ($oldData as $item) {
-            $model->setRawAttributes((array)$item, true);
-            $model->setRawAttributes(array_merge((array)$item, $data));
+            $model->setRawAttributes((array) $item, true);
+            $model->setRawAttributes(array_merge((array) $item, $data));
             $model->syncChanges();
             $this->generateLog($model, self::BATCH_UPDATED);
         }
     }
 
     /**
-     * DateTime: 2022/10/8 11:22
      * @param Model $model
-     * @param array $data
      */
-    public function batchDeleted($model, array $data)
+    public function batchDeleted($model, array $data): void
     {
         foreach ($data as $item) {
-            $model->setRawAttributes((array)$item);
+            $model->setRawAttributes((array) $item);
             $this->generateLog($model, self::BATCH_DELETED);
         }
     }

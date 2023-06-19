@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/4/28 10:40
+ * Date 2023/4/28 10:40.
  */
 
 namespace Chance\Log\Test\think\model;
@@ -23,7 +23,7 @@ class User extends Model
 {
     protected $name = 'user';
 
-    public function setJson($json = [])
+    public function setJson($json = []): void
     {
         $this->json = $json;
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/4/26 11:18
+ * Date 2023/4/26 11:18.
  */
 
 namespace Chance\Log\Test\think;
@@ -12,6 +12,11 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 use think\db\builder\Mysql;
 use think\facade\Db;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class TestCase extends BaseTestCase
 {
     public static function setUpBeforeClass(): void
@@ -25,34 +30,34 @@ class TestCase extends BaseTestCase
     private static function connections(): void
     {
         Db::setConfig([
-            "connections" => [
-                "mysql" => [
-                    "type" => MySqlConnection::class,
-                    "hostname" => getenv("MYSQL_HOST") ?: "mysql",
-                    "hostport" => getenv("MYSQL_PORT") ?: 3306,
-                    "database" => "test",
-                    "username" => "root",
-                    "password" => "root",
-                    "charset" => "utf8",
-                    "collation" => "utf8_unicode_ci",
-                    "prefix" => "tb_",
-                    "builder" => Mysql::class,
-                    "query" => Query::class,
+            'connections' => [
+                'mysql' => [
+                    'type' => MySqlConnection::class,
+                    'hostname' => getenv('MYSQL_HOST') ?: 'mysql',
+                    'hostport' => getenv('MYSQL_PORT') ?: 3306,
+                    'database' => 'test',
+                    'username' => 'root',
+                    'password' => 'root',
+                    'charset' => 'utf8',
+                    'collation' => 'utf8_unicode_ci',
+                    'prefix' => 'tb_',
+                    'builder' => Mysql::class,
+                    'query' => Query::class,
                 ],
-                "default1" => [
-                    "type" => MySqlConnection::class,
-                    "hostname" => getenv("MYSQL_HOST") ?: "mysql1",
-                    "hostport" => getenv("MYSQL1_PORT") ?: 3306,
-                    "database" => "test1",
-                    "username" => "root",
-                    "password" => "root",
-                    "charset" => "utf8",
-                    "collation" => "utf8_unicode_ci",
-                    "prefix" => "tb_",
-                    "builder" => Mysql::class,
-                    "query" => Query::class,
+                'default1' => [
+                    'type' => MySqlConnection::class,
+                    'hostname' => getenv('MYSQL_HOST') ?: 'mysql1',
+                    'hostport' => getenv('MYSQL1_PORT') ?: 3306,
+                    'database' => 'test1',
+                    'username' => 'root',
+                    'password' => 'root',
+                    'charset' => 'utf8',
+                    'collation' => 'utf8_unicode_ci',
+                    'prefix' => 'tb_',
+                    'builder' => Mysql::class,
+                    'query' => Query::class,
                 ],
-            ]
+            ],
         ]);
     }
 
@@ -74,7 +79,7 @@ class TestCase extends BaseTestCase
                 )
                     comment '用户';
             ");
-        Db::connect("default1")->query("
+        Db::connect('default1')->query("
                 create table if not exists tb_user
                 (
                     id          int auto_increment
@@ -94,7 +99,7 @@ class TestCase extends BaseTestCase
 
     private static function truncateTable(): void
     {
-        Db::query("truncate table tb_user;");
-        Db::connect("default1")->query("truncate table tb_user;");
+        Db::query('truncate table tb_user;');
+        Db::connect('default1')->query('truncate table tb_user;');
     }
 }

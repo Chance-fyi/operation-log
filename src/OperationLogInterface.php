@@ -1,75 +1,59 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2022/3/9 9:48
+ * Date 2022/3/9 9:48.
  */
 
 namespace Chance\Log;
 
+use Illuminate\Database\Eloquent\Model as LaravelModel;
+use think\Model as ThinkModel;
+
 interface OperationLogInterface
 {
     /**
-     * Notes: 获取主键
-     * DateTime: 2022/10/8 10:55
-     * @param $model
-     * @return string
+     * Get primary key.
      */
-    public function getPk($model): string;
+    public function getPk(ThinkModel|LaravelModel $model): string;
 
     /**
-     * Notes: 获取表名
-     * DateTime: 2022/9/28 17:22
-     * @param $model
-     * @return string
+     * Get table name.
      */
-    public function getTableName($model): string;
+    public function getTableName(ThinkModel|LaravelModel $model): string;
 
     /**
-     * Notes: 获取数据库名
-     * DateTime: 2022/9/28 17:25
-     * @param $model
-     * @return string
+     * Get database name.
      */
-    public function getDatabaseName($model): string;
+    public function getDatabaseName(ThinkModel|LaravelModel $model): string;
 
     /**
-     * Notes: 执行SQL
-     * DateTime: 2022/9/28 17:29
-     * @param $model
-     * @param string $sql
-     * @return mixed
+     * Execute SQL.
      */
-    public function executeSQL($model, string $sql);
+    public function executeSQL(ThinkModel|LaravelModel $model, string $sql): mixed;
 
     /**
-     * Notes: 获取模型上当前所有的属性
-     * DateTime: 2022/10/6 14:33
-     * @param $model
-     * @return array
+     * Obtain all current attributes on the model.
      */
-    public function getAttributes($model): array;
+    public function getAttributes(ThinkModel|LaravelModel $model): array;
 
     /**
-     * Notes: 获取模型上当前修改的属性
-     * DateTime: 2022/10/6 14:34
-     * @param $model
-     * @return array
+     * Obtain the currently modified properties on the model.
      */
-    public function getChangedAttributes($model): array;
+    public function getChangedAttributes(ThinkModel|LaravelModel $model): array;
 
-    public function getValue($model, string $key): string;
+    public function getValue(ThinkModel|LaravelModel $model, string $key): string;
 
-    public function getOldValue($model, string $key): string;
+    public function getOldValue(ThinkModel|LaravelModel $model, string $key): string;
 
-    public function created($model, array $data);
+    public function created(ThinkModel|LaravelModel $model, array $data): void;
 
-    public function updated($model, array $oldData, array $data);
+    public function updated(ThinkModel|LaravelModel $model, array $oldData, array $data): void;
 
-    public function deleted($model, array $data);
+    public function deleted(ThinkModel|LaravelModel $model, array $data): void;
 
-    public function batchCreated($model, array $data);
+    public function batchCreated(ThinkModel|LaravelModel $model, array $data): void;
 
-    public function batchUpdated($model, array $oldData, array $data);
+    public function batchUpdated(ThinkModel|LaravelModel $model, array $oldData, array $data): void;
 
-    public function batchDeleted($model, array $data);
+    public function batchDeleted($model, array $data): void;
 }

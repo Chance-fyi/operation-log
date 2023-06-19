@@ -1,16 +1,22 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/4/27 14:56
+ * Date 2023/4/27 14:56.
  */
 
 namespace Chance\Log\Test\illuminate;
 
 use Chance\Log\facades\OperationLog;
 use Illuminate\Database\Capsule\Manager;
+
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class DbTest extends TestCase
 {
     public function testCreated()
@@ -53,7 +59,7 @@ class DbTest extends TestCase
 
     public function testUpdated()
     {
-        $old = (array)Manager::table('user')->find(1);
+        $old = (array) Manager::table('user')->find(1);
         $new = mockData();
         Manager::table('user')->where('id', $old['id'])->update($new);
         $log = updateLog($old, $new);
@@ -63,7 +69,7 @@ class DbTest extends TestCase
 
     public function testBatchUpdated()
     {
-        $old = Manager::table('user')->where('id', '<=', 5)->get()->map(fn($v) => (array)$v)->toArray();
+        $old = Manager::table('user')->where('id', '<=', 5)->get()->map(fn ($v) => (array) $v)->toArray();
         $new = mockData();
         Manager::table('user')->where('id', '<=', 5)->update($new);
         $log = batchUpdateLog($old, $new);
@@ -73,11 +79,11 @@ class DbTest extends TestCase
 
     public function testDeleted()
     {
-        $old = (array)Manager::table('user')->find(1);
+        $old = (array) Manager::table('user')->find(1);
         Manager::table('user')->delete($old['id']);
         $log = deleteLog($old);
 
-        $old = (array)Manager::table('user')->find(2);
+        $old = (array) Manager::table('user')->find(2);
         Manager::table('user')->where('id', $old['id'])->delete();
         $log .= deleteLog($old);
 
@@ -86,11 +92,11 @@ class DbTest extends TestCase
 
     public function testBatchDeleted()
     {
-        $old = Manager::table('user')->where('id', '<=', 5)->get()->map(fn($v) => (array)$v)->toArray();
+        $old = Manager::table('user')->where('id', '<=', 5)->get()->map(fn ($v) => (array) $v)->toArray();
         Manager::table('user')->where('id', '<=', 5)->delete();
         $log = batchDeleteLog($old);
 
-        $old = Manager::table('user')->get()->map(fn($v) => (array)$v)->toArray();
+        $old = Manager::table('user')->get()->map(fn ($v) => (array) $v)->toArray();
         Manager::table('user')->delete();
         $log .= batchDeleteLog($old);
 
@@ -105,11 +111,11 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log = createLog($data);
 
-        $old = (array)Manager::table('user')->find($id);
+        $old = (array) Manager::table('user')->find($id);
         $old['json->name'] = json_decode($old['json'], true)['name'];
         $new = mockData();
         $new = [
-            'json->name' => $new['name']
+            'json->name' => $new['name'],
         ];
         Manager::table('user')->where('id', $id)->update($new);
         $log .= updateLog($old, $new);
@@ -120,11 +126,11 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log .= createLog($data);
 
-        $old = (array)Manager::table('user')->find($id);
+        $old = (array) Manager::table('user')->find($id);
         $old['json->data->name'] = json_decode($old['json'], true)['data']['name'];
         $new = mockData();
         $new = [
-            'json->data->name' => $new['name']
+            'json->data->name' => $new['name'],
         ];
         Manager::table('user')->where('id', $id)->update($new);
         $log .= updateLog($old, $new);
@@ -134,23 +140,23 @@ class DbTest extends TestCase
 
     public function testOther()
     {
-        $old = (array)Manager::table('user')->first();
+        $old = (array) Manager::table('user')->first();
         Manager::table('user')->where('id', $old['id'])->increment('age');
         $log = updateLog($old, ['age' => '`age` + 1']);
 
-        $old = (array)Manager::table('user')->first();
+        $old = (array) Manager::table('user')->first();
         Manager::table('user')->where('id', $old['id'])->increment('age', 5);
         $log .= updateLog($old, ['age' => '`age` + 5']);
 
-        $old = (array)Manager::table('user')->first();
+        $old = (array) Manager::table('user')->first();
         Manager::table('user')->where('id', $old['id'])->decrement('age');
         $log .= updateLog($old, ['age' => '`age` - 1']);
 
-        $old = (array)Manager::table('user')->first();
+        $old = (array) Manager::table('user')->first();
         Manager::table('user')->where('id', $old['id'])->decrement('age', 5);
         $log .= updateLog($old, ['age' => '`age` - 5']);
 
-        $old = (array)Manager::table('user')->first();
+        $old = (array) Manager::table('user')->first();
         $new = ['name' => 'Chance'];
         Manager::table('user')->where('id', $old['id'])->decrement('age', 5, $new);
         $new['age'] = '`age` - 5';
@@ -177,73 +183,73 @@ class DbTest extends TestCase
     public function testTransaction()
     {
         Manager::beginTransaction();
-            $data = mockData();
-            $id = Manager::table('user')->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $id = Manager::table('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
         Manager::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Manager::beginTransaction();
-            $data = mockData();
-            Manager::table('user')->insertGetId($data);
+        $data = mockData();
+        Manager::table('user')->insertGetId($data);
         Manager::rollback();
         assertEmpty(OperationLog::getLog());
 
         Manager::beginTransaction();
-            $data = mockData();
-            $id = Manager::table('user')->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $id = Manager::table('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
 
-            Manager::beginTransaction();
-                $data = mockData();
-                Manager::table('user')->insertGetId($data);
-            Manager::rollback();
+        Manager::beginTransaction();
+        $data = mockData();
+        Manager::table('user')->insertGetId($data);
+        Manager::rollback();
         Manager::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Manager::beginTransaction();
-            $data = mockData();
-            $id = Manager::table('user')->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $id = Manager::table('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
 
-            Manager::beginTransaction();
-                $data = mockData();
-                $id = Manager::table('user')->insertGetId($data);
-                array_unshift($data, $id);
-                $log .= createLog($data);
-            Manager::commit();
+        Manager::beginTransaction();
+        $data = mockData();
+        $id = Manager::table('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log .= createLog($data);
+        Manager::commit();
         Manager::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
         Manager::beginTransaction();
-            $data = mockData();
-            Manager::table('user')->insertGetId($data);
+        $data = mockData();
+        Manager::table('user')->insertGetId($data);
 
-            Manager::beginTransaction();
-                $data = mockData();
-                Manager::table('user')->insertGetId($data);
-            Manager::commit();
+        Manager::beginTransaction();
+        $data = mockData();
+        Manager::table('user')->insertGetId($data);
+        Manager::commit();
         Manager::rollback();
         assertEmpty(OperationLog::getLog());
 
         Manager::beginTransaction();
-            $data = mockData();
-            $id = Manager::table('user')->insertGetId($data);
-            array_unshift($data, $id);
-            $log = createLog($data);
+        $data = mockData();
+        $id = Manager::table('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
 
-            Manager::beginTransaction();
-                $data = mockData();
-                Manager::table('user')->insertGetId($data);
+        Manager::beginTransaction();
+        $data = mockData();
+        Manager::table('user')->insertGetId($data);
 
-                Manager::beginTransaction();
-                    $data = mockData();
-                    Manager::table('user')->insertGetId($data);
-                Manager::commit();
-            Manager::rollback();
+        Manager::beginTransaction();
+        $data = mockData();
+        Manager::table('user')->insertGetId($data);
+        Manager::commit();
+        Manager::rollback();
         Manager::commit();
         assertEquals(OperationLog::getLog(), trim($log));
     }

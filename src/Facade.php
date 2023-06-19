@@ -1,21 +1,25 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2022/9/28 17:15
+ * Date 2022/9/28 17:15.
  */
 
 namespace Chance\Log;
 
 abstract class Facade
 {
-    protected static $resolvedInstance;
+    protected static array $resolvedInstance;
 
-    protected static function getFacadeClass(): string
+    public static function __callStatic($method, $args)
     {
-        return "";
+        $class = static::getFacadeClass();
+        $instance = self::$resolvedInstance[$class] ?? new $class();
+        self::$resolvedInstance[$class] = $instance;
+
+        return call_user_func_array([$instance, $method], $args);
     }
 
-    public static function setResolvedInstance($class, $instance)
+    public static function setResolvedInstance($class, $instance): void
     {
         self::$resolvedInstance[$class] = $instance;
     }
@@ -25,11 +29,8 @@ abstract class Facade
         return self::$resolvedInstance[$class] ?? null;
     }
 
-    public static function __callStatic($method, $args)
+    protected static function getFacadeClass(): string
     {
-        $class = static::getFacadeClass();
-        $instance = self::$resolvedInstance[$class] ?? new $class();
-        self::$resolvedInstance[$class] = $instance;
-        return call_user_func_array([$instance, $method], $args);
+        return '';
     }
 }
