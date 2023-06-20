@@ -36,14 +36,14 @@ jobs:
       - name: Composer install
         run: composer install
 
+      - name: Static analysis
+        run: composer analyse
+
       - name: Wait for MySQL
         run: |
           while ! docker compose exec mysql mysql --user=root --password=root -e "SELECT 1" >/dev/null 2>&1 || ! docker compose exec mysql1 mysql --user=root --password=root -e "SELECT 1" >/dev/null 2>&1; do
             sleep 1
           done
-
-      - name: Static analysis
-        run: composer analyse
 
       - name: Run tests
         env:
