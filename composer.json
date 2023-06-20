@@ -29,11 +29,13 @@
     "topthink/think-orm": "2.0.x-dev",
     "fakerphp/faker": "^1.21@dev",
     "friendsofphp/php-cs-fixer": "dev-master",
-    "phpunit/phpunit": "9.6.x-dev"
+    "phpunit/phpunit": "9.6.x-dev",
+    "phpstan/phpstan": "1.11.x-dev"
   },
   "scripts": {
-    "test": "./vendor/bin/phpunit",
-    "cs-fix": "php-cs-fixer fix $1"
+    "test": "phpunit",
+    "cs-fix": "php-cs-fixer fix $1",
+    "analyse": "phpstan analyse -c phpstan.neon --memory-limit=-1"
   },
   "bin": [
     "bin/chance-fyi-operation-log"

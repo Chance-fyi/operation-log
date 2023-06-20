@@ -8,6 +8,8 @@ namespace Chance\Log\orm\think;
 
 use Chance\Log\OperationLog;
 use Chance\Log\OperationLogInterface;
+use think\db\exception\DbException;
+use think\db\PDOConnection;
 use think\db\Raw;
 use think\helper\Str;
 use think\Model;
@@ -44,6 +46,8 @@ class Log extends OperationLog implements OperationLogInterface
 
     /**
      * @param Model $model
+     *
+     * @throws DbException
      */
     public function executeSQL($model, string $sql): mixed
     {
@@ -51,7 +55,10 @@ class Log extends OperationLog implements OperationLogInterface
             return $model->getQuery()->getConnection()->query($sql);
         }
 
-        return $model->db()->getConnection()->query($sql);
+        /** @var PDOConnection $connection */
+        $connection = $model->db()->getConnection();
+
+        return $connection->query($sql);
     }
 
     /**

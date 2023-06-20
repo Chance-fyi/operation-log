@@ -8,6 +8,7 @@ namespace Chance\Log\orm\illuminate;
 
 use Chance\Log\facades\IlluminateOrmLog;
 use Chance\Log\facades\OperationLog;
+use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -74,8 +75,11 @@ class Builder extends \Illuminate\Database\Query\Builder
     private function generateModel(): Model
     {
         $name = $this->from;
-        $database = $this->getConnection()->getDatabaseName();
-        $table = $this->getConnection()->getTablePrefix() . $name;
+
+        /** @var Connection $connection */
+        $connection = $this->getConnection();
+        $database = $connection->getDatabaseName();
+        $table = $connection->getTablePrefix() . $name;
 
         $mapping = [
             OperationLog::getTableModelMapping(),
@@ -87,15 +91,15 @@ class Builder extends \Illuminate\Database\Query\Builder
             }
         }
 
-        $modelNamespace = $this->getConnection()->getConfig('modelNamespace') ?: 'app\\model';
+        $modelNamespace = $connection->getConfig('modelNamespace') ?: 'app\\model';
         $className = trim($modelNamespace, '\\') . '\\' . Str::studly($name);
         if (class_exists($className)) {
             $model = new $className();
         } else {
             $model = new DbModel();
-            $model->setQuery($this->getConnection());
+            $model->setQuery($connection);
             $model->setTable($name);
-            $model->logKey = $this->getConnection()->getConfig('logKey') ?: $model->getKeyName();
+            $model->logKey = $connection->getConfig('logKey') ?: $model->getKeyName();
         }
 
         return $model;
@@ -107,7 +111,9 @@ class Builder extends \Illuminate\Database\Query\Builder
         if (is_array(reset($values))) {
             IlluminateOrmLog::batchCreated($model, $values);
         } else {
-            $id = $this->getConnection()->getPdo()->lastInsertId();
+            /** @var Connection $connection */
+            $connection = $this->getConnection();
+            $id = $connection->getPdo()->lastInsertId();
             $pk = $model->getKeyName();
             $values[$pk] = $id;
             IlluminateOrmLog::created($model, $values);

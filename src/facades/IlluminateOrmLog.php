@@ -11,6 +11,8 @@ use Chance\Log\orm\illuminate\Log;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @mixin Log
+ *
  * @method static created(Model $model, array $data)
  * @method static updated(Model $model, array $oldData, array $data)
  * @method static deleted(Model $model, array $data)

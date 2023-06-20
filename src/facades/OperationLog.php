@@ -9,6 +9,8 @@ namespace Chance\Log\facades;
 use Chance\Log\Facade;
 
 /**
+ * @mixin \Chance\Log\OperationLog
+ *
  * @method static getLog()
  * @method static clearLog()
  * @method static setTableModelMapping(array $map)
