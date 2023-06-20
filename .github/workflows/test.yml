@@ -42,6 +42,9 @@ jobs:
             sleep 1
           done
 
+      - name: Static analysis
+        run: composer analyse
+
       - name: Run tests
         env:
           MYSQL_HOST: 127.0.0.1
