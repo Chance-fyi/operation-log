@@ -30,7 +30,10 @@
     "fakerphp/faker": "^1.21@dev",
     "friendsofphp/php-cs-fixer": "dev-master",
     "phpunit/phpunit": "9.6.x-dev",
-    "phpstan/phpstan": "1.11.x-dev"
+    "phpstan/phpstan": "1.11.x-dev",
+    "hyperf/database": "^3.0@dev",
+    "hyperf/di": "^3.0@dev",
+    "hyperf/pimple": "^2.1"
   },
   "scripts": {
     "test": "phpunit",

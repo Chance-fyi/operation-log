@@ -9,6 +9,7 @@ namespace Chance\Log;
 use Chance\Log\facades\OperationLog as OperationLogFacade;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use think\Model as ThinkModel;
+use Hyperf\Database\Model\Model as HyperfModel;
 
 /**
  * @method getPk($model)
@@ -73,7 +74,7 @@ class OperationLog
     /**
      * Get table comment.
      */
-    public function getTableComment(ThinkModel|LaravelModel $model): string
+    public function getTableComment(ThinkModel|LaravelModel|HyperfModel $model): string
     {
         $table = $this->getTableName($model);
         if (isset($model->tableComment)) {
@@ -106,7 +107,7 @@ class OperationLog
     /**
      * Get field comment.
      */
-    public function getColumnComment(ThinkModel|LaravelModel $model, string $field): string
+    public function getColumnComment(ThinkModel|LaravelModel|HyperfModel $model, string $field): string
     {
         if (isset($model->columnComment)) {
             return $model->columnComment[$field] ?? $field;
@@ -135,7 +136,7 @@ class OperationLog
         return (string) ($comment ?: $field);
     }
 
-    public function generateLog(ThinkModel|LaravelModel $model, string $type): void
+    public function generateLog(ThinkModel|LaravelModel|HyperfModel $model, string $type): void
     {
         if ($model->doNotRecordLog ?? false) {
             return;
