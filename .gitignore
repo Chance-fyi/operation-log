@@ -2,3 +2,5 @@
 /vendor/
 /.phpunit.*
 /composer.lock
+/phpunit.xml
+/phpstan.neon

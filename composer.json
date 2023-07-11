@@ -35,7 +35,7 @@
   "scripts": {
     "test": "phpunit",
     "cs-fix": "php-cs-fixer fix $1",
-    "analyse": "phpstan analyse -c phpstan.neon --memory-limit=-1"
+    "analyse": "phpstan analyse --memory-limit=-1"
   },
   "bin": [
     "bin/chance-fyi-operation-log"
