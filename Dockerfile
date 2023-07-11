@@ -13,7 +13,7 @@ RUN set -x \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
     # 安装扩展
     && docker-php-ext-install pdo_mysql \
-        zip  \
+        zip \
     && docker-php-ext-enable xdebug \
     # xdebug配置
     && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
