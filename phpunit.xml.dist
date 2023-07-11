@@ -8,5 +8,8 @@
         <testsuite name="illuminate">
             <directory>./tests/illuminate/</directory>
         </testsuite>
+        <testsuite name="hyperf">
+            <directory>./tests/hyperf/</directory>
+        </testsuite>
     </testsuites>
 </phpunit>
