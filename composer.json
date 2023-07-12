@@ -33,7 +33,8 @@
     "phpstan/phpstan": "1.11.x-dev",
     "hyperf/database": "^3.0@dev",
     "hyperf/di": "^3.0@dev",
-    "hyperf/pimple": "^2.1"
+    "hyperf/pimple": "^2.1",
+    "hyperf/config": "^3.0@dev"
   },
   "scripts": {
     "test": "phpunit",

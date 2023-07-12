@@ -12,6 +12,7 @@ use Hyperf\Database\Connection;
 use Hyperf\Database\ConnectionResolver;
 use Hyperf\Database\Connectors\ConnectionFactory;
 use Hyperf\Database\Model\Register;
+use Hyperf\Di\ClassLoader;
 use Hyperf\Pimple\ContainerFactory;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
@@ -27,6 +28,7 @@ class TestCase extends BaseTestCase
         include_once __DIR__ . '/../function.php';
 
         defined('BASE_PATH') ?: define('BASE_PATH', __DIR__ . '/../../');
+        ClassLoader::init(configDir: BASE_PATH . '/tests/hyperf/config');
 
         $container = (new ContainerFactory())();
         ApplicationContext::setContainer($container);
@@ -52,7 +54,7 @@ class TestCase extends BaseTestCase
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => 'tb_',
-        ]));
+        ], 'default'));
         $connection->addConnection('default1', $factory->make([
             'driver' => 'mysql',
             'host' => getenv('MYSQL_HOST') ?: 'mysql1',
@@ -63,7 +65,7 @@ class TestCase extends BaseTestCase
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => 'tb_',
-        ]));
+        ], 'default1'));
     }
 
     private static function truncateTable(): void

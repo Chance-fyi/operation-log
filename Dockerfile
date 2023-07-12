@@ -14,6 +14,7 @@ RUN set -x \
     # 安装扩展
     && docker-php-ext-install pdo_mysql \
         zip \
+        pcntl \
     && docker-php-ext-enable xdebug \
     # xdebug配置
     && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
