@@ -5,8 +5,26 @@ parameters:
 		- src
 		- tests
 	ignoreErrors:
-	    - '#Call to an undefined static method Illuminate\\Database\\Capsule\\Manager::.*\(\)#'
-	    - '#Call to an undefined static method think\\facade\\Db::query\(\)#'
-	    - '#Call to an undefined method think\\db\\BaseQuery::inc\(\)#'
-	    - '#Call to an undefined method think\\db\\BaseQuery::dec\(\)#'
-	    - '#Call to an undefined method think\\db\\ConnectionInterface::query\(\)#'
+	    -
+	        path: src/orm/hyperf/Log.php
+	        messages:
+	            - '#Call to an undefined method Hyperf\\Database\\ConnectionInterface::getTablePrefix\(\).#'
+	            - '#Call to an undefined method Hyperf\\Database\\ConnectionInterface::getDatabaseName\(\).#'
+	    -
+	        paths:
+	            - tests/illuminate/DbTest.php
+	            - tests/illuminate/ModelTest.php
+	            - tests/illuminate/TestCase.php
+	        message: '#Call to an undefined static method Illuminate\\Database\\Capsule\\Manager::.*\(\)#'
+	    -
+	        paths:
+	            - tests/think/DbTest.php
+	            - tests/think/ModelTest.php
+	        messages:
+	            - '#Call to an undefined method think\\db\\BaseQuery::inc\(\)#'
+	            - '#Call to an undefined method think\\db\\BaseQuery::dec\(\)#'
+	    -
+	        path: tests/think/TestCase.php
+	        messages:
+	            - '#Call to an undefined method think\\db\\ConnectionInterface::query\(\)#'
+	            - '#Call to an undefined static method think\\facade\\Db::query\(\)#'

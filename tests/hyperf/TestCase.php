@@ -26,7 +26,7 @@ class TestCase extends BaseTestCase
     {
         include_once __DIR__ . '/../function.php';
 
-        define('BASE_PATH', __DIR__ . '/../../');
+        defined('BASE_PATH') ?: define('BASE_PATH', __DIR__ . '/../../');
 
         $container = (new ContainerFactory())();
         ApplicationContext::setContainer($container);

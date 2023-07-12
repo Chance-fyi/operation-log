@@ -6,10 +6,12 @@
 
 namespace Chance\Log\orm\hyperf;
 
+use Chance\Log\OperationLog;
+use Chance\Log\OperationLogInterface;
 use Hyperf\Database\Model\Model;
 use Hyperf\Stringable\Str;
 
-class Log extends \Chance\Log\orm\illuminate\Log
+class Log extends OperationLog implements OperationLogInterface
 {
     /**
      * @param Model $model

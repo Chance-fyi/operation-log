@@ -192,7 +192,7 @@ class DbTest extends TestCase
         Db::beginTransaction();
         $data = mockData();
         Db::table('user')->insertGetId($data);
-        Db::rollback();
+        Db::rollBack();
         assertEmpty(OperationLog::getLog());
 
         Db::beginTransaction();
@@ -204,7 +204,7 @@ class DbTest extends TestCase
         Db::beginTransaction();
         $data = mockData();
         Db::table('user')->insertGetId($data);
-        Db::rollback();
+        Db::rollBack();
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
 
@@ -231,7 +231,7 @@ class DbTest extends TestCase
         $data = mockData();
         Db::table('user')->insertGetId($data);
         Db::commit();
-        Db::rollback();
+        Db::rollBack();
         assertEmpty(OperationLog::getLog());
 
         Db::beginTransaction();
@@ -248,7 +248,7 @@ class DbTest extends TestCase
         $data = mockData();
         Db::table('user')->insertGetId($data);
         Db::commit();
-        Db::rollback();
+        Db::rollBack();
         Db::commit();
         assertEquals(OperationLog::getLog(), trim($log));
     }
