@@ -58,7 +58,7 @@ class TestCase extends BaseTestCase
         $connection->addConnection('default1', $factory->make([
             'driver' => 'mysql',
             'host' => getenv('MYSQL_HOST') ?: 'mysql1',
-            'port' => getenv('MYSQL_PORT') ?: 3306,
+            'port' => getenv('MYSQL1_PORT') ?: 3306,
             'database' => 'test1',
             'username' => 'root',
             'password' => 'root',
