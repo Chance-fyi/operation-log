@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/7/11 15:09
+ * Date 2023/7/11 15:09.
  */
 
 namespace Chance\Log\orm\hyperf;

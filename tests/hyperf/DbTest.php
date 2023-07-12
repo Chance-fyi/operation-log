@@ -58,7 +58,7 @@ class DbTest extends TestCase
 
     public function testUpdated()
     {
-        $old = (array)Db::table('user')->find(1);
+        $old = (array) Db::table('user')->find(1);
         $new = mockData();
         Db::table('user')->where('id', $old['id'])->update($new);
         $log = updateLog($old, $new);
@@ -68,7 +68,7 @@ class DbTest extends TestCase
 
     public function testBatchUpdated()
     {
-        $old = Db::table('user')->where('id', '<=', 5)->get()->map(fn($v) => (array)$v)->toArray();
+        $old = Db::table('user')->where('id', '<=', 5)->get()->map(fn ($v) => (array) $v)->toArray();
         $new = mockData();
         Db::table('user')->where('id', '<=', 5)->update($new);
         $log = batchUpdateLog($old, $new);
@@ -78,11 +78,11 @@ class DbTest extends TestCase
 
     public function testDeleted()
     {
-        $old = (array)Db::table('user')->find(1);
+        $old = (array) Db::table('user')->find(1);
         Db::table('user')->delete($old['id']);
         $log = deleteLog($old);
 
-        $old = (array)Db::table('user')->find(2);
+        $old = (array) Db::table('user')->find(2);
         Db::table('user')->where('id', $old['id'])->delete();
         $log .= deleteLog($old);
 
@@ -91,11 +91,11 @@ class DbTest extends TestCase
 
     public function testBatchDeleted()
     {
-        $old = Db::table('user')->where('id', '<=', 5)->get()->map(fn($v) => (array)$v)->toArray();
+        $old = Db::table('user')->where('id', '<=', 5)->get()->map(fn ($v) => (array) $v)->toArray();
         Db::table('user')->where('id', '<=', 5)->delete();
         $log = batchDeleteLog($old);
 
-        $old = Db::table('user')->get()->map(fn($v) => (array)$v)->toArray();
+        $old = Db::table('user')->get()->map(fn ($v) => (array) $v)->toArray();
         Db::table('user')->delete();
         $log .= batchDeleteLog($old);
 
@@ -110,7 +110,7 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log = createLog($data);
 
-        $old = (array)Db::table('user')->find($id);
+        $old = (array) Db::table('user')->find($id);
         $old['json->name'] = json_decode($old['json'], true)['name'];
         $new = mockData();
         $new = [
@@ -125,7 +125,7 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log .= createLog($data);
 
-        $old = (array)Db::table('user')->find($id);
+        $old = (array) Db::table('user')->find($id);
         $old['json->data->name'] = json_decode($old['json'], true)['data']['name'];
         $new = mockData();
         $new = [
@@ -139,23 +139,23 @@ class DbTest extends TestCase
 
     public function testOther()
     {
-        $old = (array)Db::table('user')->first();
+        $old = (array) Db::table('user')->first();
         Db::table('user')->where('id', $old['id'])->increment('age');
         $log = updateLog($old, ['age' => '`age` + 1']);
 
-        $old = (array)Db::table('user')->first();
+        $old = (array) Db::table('user')->first();
         Db::table('user')->where('id', $old['id'])->increment('age', 5);
         $log .= updateLog($old, ['age' => '`age` + 5']);
 
-        $old = (array)Db::table('user')->first();
+        $old = (array) Db::table('user')->first();
         Db::table('user')->where('id', $old['id'])->decrement('age');
         $log .= updateLog($old, ['age' => '`age` - 1']);
 
-        $old = (array)Db::table('user')->first();
+        $old = (array) Db::table('user')->first();
         Db::table('user')->where('id', $old['id'])->decrement('age', 5);
         $log .= updateLog($old, ['age' => '`age` - 5']);
 
-        $old = (array)Db::table('user')->first();
+        $old = (array) Db::table('user')->first();
         $new = ['name' => 'Chance'];
         Db::table('user')->where('id', $old['id'])->decrement('age', 5, $new);
         $new['age'] = '`age` - 5';

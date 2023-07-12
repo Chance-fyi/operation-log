@@ -7,9 +7,9 @@
 namespace Chance\Log;
 
 use Chance\Log\facades\OperationLog as OperationLogFacade;
+use Hyperf\Database\Model\Model as HyperfModel;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use think\Model as ThinkModel;
-use Hyperf\Database\Model\Model as HyperfModel;
 
 /**
  * @method getPk($model)

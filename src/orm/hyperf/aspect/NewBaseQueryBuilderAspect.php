@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/7/12 10:25
+ * Date 2023/7/12 10:25.
  */
 
 namespace Chance\Log\orm\hyperf\aspect;
@@ -16,7 +16,7 @@ use Hyperf\Di\Aop\ProceedingJoinPoint;
 class NewBaseQueryBuilderAspect extends AbstractAspect
 {
     public array $classes = [
-        'Hyperf\Database\Model\Model::newBaseQueryBuilder'
+        'Hyperf\Database\Model\Model::newBaseQueryBuilder',
     ];
 
     public function process(ProceedingJoinPoint $proceedingJoinPoint): Builder

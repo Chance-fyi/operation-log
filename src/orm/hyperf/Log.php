@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm
- * Date 2023/7/11 15:15
+ * Date 2023/7/11 15:15.
  */
 
 namespace Chance\Log\orm\hyperf;
@@ -81,7 +81,7 @@ class Log extends OperationLog implements OperationLogInterface
             return json_encode($value, JSON_UNESCAPED_UNICODE);
         }
 
-        return (string)$value;
+        return (string) $value;
     }
 
     /**
@@ -95,7 +95,7 @@ class Log extends OperationLog implements OperationLogInterface
 
         $keyText = $key . '_text';
         $attributeFun = 'get' . Str::studly(Str::lower($keyText)) . 'Attribute';
-        $value = (string)(method_exists($model, $attributeFun) ? $model->{$attributeFun}($model->getOriginal($key)) : $model->getOriginal($key));
+        $value = (string) (method_exists($model, $attributeFun) ? $model->{$attributeFun}($model->getOriginal($key)) : $model->getOriginal($key));
 
         $val = json_decode($value, true);
         if (!isset($jsonKey) || is_null($val) || !is_array($val)) {
@@ -106,7 +106,7 @@ class Log extends OperationLog implements OperationLogInterface
             $val = $val[$k];
         }
 
-        return (string)$val;
+        return (string) $val;
     }
 
     /**
@@ -155,8 +155,8 @@ class Log extends OperationLog implements OperationLogInterface
     public function batchUpdated($model, array $oldData, array $data): void
     {
         foreach ($oldData as $item) {
-            $model->setRawAttributes((array)$item, true);
-            $model->setRawAttributes(array_merge((array)$item, $data));
+            $model->setRawAttributes((array) $item, true);
+            $model->setRawAttributes(array_merge((array) $item, $data));
             $model->syncChanges();
             $this->generateLog($model, self::BATCH_UPDATED);
         }
@@ -168,7 +168,7 @@ class Log extends OperationLog implements OperationLogInterface
     public function batchDeleted($model, array $data): void
     {
         foreach ($data as $item) {
-            $model->setRawAttributes((array)$item);
+            $model->setRawAttributes((array) $item);
             $this->generateLog($model, self::BATCH_DELETED);
         }
     }

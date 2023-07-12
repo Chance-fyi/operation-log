@@ -6,9 +6,9 @@
 
 namespace Chance\Log;
 
+use Hyperf\Database\Model\Model as HyperfModel;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use think\Model as ThinkModel;
-use Hyperf\Database\Model\Model as HyperfModel;
 
 interface OperationLogInterface
 {
