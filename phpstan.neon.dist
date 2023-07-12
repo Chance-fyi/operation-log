@@ -28,3 +28,8 @@ parameters:
 	        messages:
 	            - '#Call to an undefined method think\\db\\ConnectionInterface::query\(\)#'
 	            - '#Call to an undefined static method think\\facade\\Db::query\(\)#'
+	    -
+	        paths:
+	            - tests/hyperf/TestCase.php
+	            - tests/hyperf/config/autoload/annotations.php
+	        message: '#Constant BASE_PATH not found.#'
