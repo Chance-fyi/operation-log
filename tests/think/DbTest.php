@@ -39,7 +39,7 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log .= createLog($data);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
         assertEmpty(OperationLog::getLog());
 
         Db::name('user')->save(mockData());
@@ -53,7 +53,7 @@ class DbTest extends TestCase
         Db::name('user')->insertAll($data);
         $log = batchCreateLog($data);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     /**
@@ -83,7 +83,7 @@ class DbTest extends TestCase
         Db::name('user')->where('id', $old['id'])->update($new);
         $log .= updateLog($old, $new);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     /**
@@ -103,7 +103,7 @@ class DbTest extends TestCase
         Db::name('user')->where('id', '<=', 5)->update($new);
         $log .= batchUpdateLog($old, $new);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     /**
@@ -121,7 +121,7 @@ class DbTest extends TestCase
         Db::name('user')->where('id', $old['id'])->delete();
         $log .= deleteLog($old);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     /**
@@ -139,7 +139,7 @@ class DbTest extends TestCase
         Db::name('user')->where('id', '<=', 7)->delete();
         $log .= batchDeleteLog($old);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     /**
@@ -194,7 +194,7 @@ class DbTest extends TestCase
         Db::name('user')->where('id', $id)->update($new);
         $log .= updateLog($old, $new);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     /**
@@ -224,7 +224,7 @@ class DbTest extends TestCase
         Db::name('user')->where('id', $old['id'])->update(['age' => Db::raw('age - 1')]);
         $log .= updateLog((array) $old, ['age' => 'age - 1']);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testMultipleDatabases()
@@ -239,7 +239,7 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log .= vsprintf('创建 用户1 (id:%s)：姓名1：%s，手机号1：%s，邮箱1：%s，性别1：%s，年龄1：%s', $data);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testTransaction()
@@ -250,7 +250,7 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log = createLog($data);
         Db::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
 
         Db::startTrans();
         $data = mockData();
@@ -269,7 +269,7 @@ class DbTest extends TestCase
         Db::name('user')->insertGetId($data);
         Db::rollback();
         Db::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
 
         Db::startTrans();
         $data = mockData();
@@ -284,7 +284,7 @@ class DbTest extends TestCase
         $log .= createLog($data);
         Db::commit();
         Db::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
 
         Db::startTrans();
         $data = mockData();
@@ -313,6 +313,6 @@ class DbTest extends TestCase
         Db::commit();
         Db::rollback();
         Db::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 }

@@ -36,7 +36,7 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log .= createLog($data);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
         assertEmpty(OperationLog::getLog());
 
         Manager::table('user')->insert(mockData());
@@ -54,7 +54,7 @@ class DbTest extends TestCase
         Manager::table('user')->insertOrIgnore($data);
         $log .= batchCreateLog($data);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testUpdated()
@@ -64,7 +64,7 @@ class DbTest extends TestCase
         Manager::table('user')->where('id', $old['id'])->update($new);
         $log = updateLog($old, $new);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testBatchUpdated()
@@ -74,7 +74,7 @@ class DbTest extends TestCase
         Manager::table('user')->where('id', '<=', 5)->update($new);
         $log = batchUpdateLog($old, $new);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testDeleted()
@@ -87,7 +87,7 @@ class DbTest extends TestCase
         Manager::table('user')->where('id', $old['id'])->delete();
         $log .= deleteLog($old);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testBatchDeleted()
@@ -100,7 +100,7 @@ class DbTest extends TestCase
         Manager::table('user')->delete();
         $log .= batchDeleteLog($old);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testJson()
@@ -135,7 +135,7 @@ class DbTest extends TestCase
         Manager::table('user')->where('id', $id)->update($new);
         $log .= updateLog($old, $new);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testOther()
@@ -162,7 +162,7 @@ class DbTest extends TestCase
         $new['age'] = '`age` - 5';
         $log .= updateLog($old, $new);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testMultipleDatabases()
@@ -177,7 +177,7 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log .= vsprintf('创建 用户1 (id:%s)：姓名1：%s，手机号1：%s，邮箱1：%s，性别1：%s，年龄1：%s', $data);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testTransaction()
@@ -188,7 +188,7 @@ class DbTest extends TestCase
         array_unshift($data, $id);
         $log = createLog($data);
         Manager::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
 
         Manager::beginTransaction();
         $data = mockData();
@@ -207,7 +207,7 @@ class DbTest extends TestCase
         Manager::table('user')->insertGetId($data);
         Manager::rollback();
         Manager::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
 
         Manager::beginTransaction();
         $data = mockData();
@@ -222,7 +222,7 @@ class DbTest extends TestCase
         $log .= createLog($data);
         Manager::commit();
         Manager::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
 
         Manager::beginTransaction();
         $data = mockData();
@@ -251,6 +251,6 @@ class DbTest extends TestCase
         Manager::commit();
         Manager::rollback();
         Manager::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 }
