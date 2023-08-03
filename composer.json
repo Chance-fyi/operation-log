@@ -43,5 +43,10 @@
   },
   "bin": [
     "bin/chance-fyi-operation-log"
-  ]
+  ],
+  "extra": {
+    "hyperf": {
+      "config": "Chance\\Log\\orm\\hyperf\\ConfigProvider"
+    }
+  }
 }
