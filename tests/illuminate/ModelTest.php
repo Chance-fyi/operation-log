@@ -50,7 +50,7 @@ class ModelTest extends TestCase
         $data['create_time'] = $user->create_time;
         $log .= createLog($data);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testBatchCreated()
@@ -83,7 +83,7 @@ class ModelTest extends TestCase
         User::query()->where('id', 1)->update($new);
         $log .= trim(updateLog($old, $new)) . sprintf('，update_time由：%s 改为：%s', $user->update_time, $user->update_time) . PHP_EOL;
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testBatchUpdated()
@@ -97,7 +97,7 @@ class ModelTest extends TestCase
             return trim($l) . sprintf('，update_time由：%s 改为：%s', $time, $time);
         }, array_filter(explode(PHP_EOL, batchUpdateLog($old, $new))), array_keys($old))) . PHP_EOL;
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testDeleted()
@@ -111,7 +111,7 @@ class ModelTest extends TestCase
         User::destroy($old['id']);
         $log .= deleteLog($old);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testBatchDeleted()
@@ -126,7 +126,7 @@ class ModelTest extends TestCase
             $log .= deleteLog($user->toArray());
         });
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testJson()
@@ -167,7 +167,7 @@ class ModelTest extends TestCase
         Timestamps::query()->where('id', $id)->update($new);
         $log .= updateLog($old, $new);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testOther()
@@ -194,7 +194,7 @@ class ModelTest extends TestCase
         $new['age'] = '`age` - 5';
         $log .= updateLog($old, $new);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testMultipleDatabases()
@@ -213,7 +213,7 @@ class ModelTest extends TestCase
         array_unshift($data, $user->id);
         $log .= vsprintf('创建 用户1 (id:%s)：姓名1：%s，手机号1：%s，邮箱1：%s，性别1：%s，年龄1：%s', $data);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testTransaction()
@@ -226,7 +226,7 @@ class ModelTest extends TestCase
         array_unshift($data, $user->id);
         $log = createLog($data);
         Manager::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
 
         Manager::beginTransaction();
         $data = mockData();
@@ -247,7 +247,7 @@ class ModelTest extends TestCase
         Timestamps::query()->create($data);
         Manager::rollback();
         Manager::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
 
         Manager::beginTransaction();
         $data = mockData();
@@ -266,7 +266,7 @@ class ModelTest extends TestCase
         $log .= createLog($data);
         Manager::commit();
         Manager::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
 
         Manager::beginTransaction();
         $data = mockData();
@@ -297,7 +297,7 @@ class ModelTest extends TestCase
         Manager::commit();
         Manager::rollback();
         Manager::commit();
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testComment()
@@ -324,7 +324,7 @@ class ModelTest extends TestCase
         $log .= createLog($data);
         OperationLog::setTableModelMapping([]);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testAttribute()
@@ -368,7 +368,7 @@ class ModelTest extends TestCase
         $log .= updateLog($old, $new);
         OperationLog::setTableModelMapping([]);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testIgnoreLogFields()
@@ -397,7 +397,7 @@ class ModelTest extends TestCase
         $log .= createLog($data);
         OperationLog::setTableModelMapping([]);
 
-        assertEquals(OperationLog::getLog(), trim($log));
+        assertEquals(trim($log), OperationLog::getLog());
     }
 
     public function testDoNotRecordLog()
@@ -422,7 +422,7 @@ class ModelTest extends TestCase
             ],
         ];
         OperationLog::setTableModelMapping($mapping);
-        assertEquals(OperationLog::getTableModelMapping(), $mapping);
+        assertEquals($mapping, OperationLog::getTableModelMapping());
 
         OperationLog::setTableModelMapping([]);
         assertEmpty(OperationLog::getTableModelMapping());
