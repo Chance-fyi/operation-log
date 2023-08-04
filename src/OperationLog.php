@@ -7,6 +7,7 @@
 namespace Chance\Log;
 
 use Chance\Log\facades\OperationLog as OperationLogFacade;
+use Hyperf\Context\Context;
 use Hyperf\Database\Model\Model as HyperfModel;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use think\Model as ThinkModel;
@@ -29,6 +30,8 @@ class OperationLog
     public const BATCH_UPDATED = 'batch_updated';
     public const DELETED = 'deleted';
     public const BATCH_DELETED = 'batch_deleted';
+
+    private const CONTEXT_LOG = 'context_operation_log';
     protected array $tableComment;
 
     protected array $columnComment;
@@ -47,7 +50,7 @@ class OperationLog
 
     public function getLog(): string
     {
-        $log = $this->log;
+        $log = $this->getRawLog();
         $this->clearLog();
 
         return trim(implode('', $log), PHP_EOL);
@@ -55,18 +58,20 @@ class OperationLog
 
     public function clearLog(): void
     {
-        $this->log = [''];
+        $this->setRawLog(['']);
     }
 
     public function beginTransaction(): void
     {
-        $this->log[] = '';
+        $log = $this->getRawLog();
+        $log[] = '';
+        $this->setRawLog($log);
     }
 
     public function rollBackTransaction(int $toLevel): void
     {
-        $this->log = array_slice($this->log, 0, $toLevel);
-        if (0 === count($this->log)) {
+        $this->setRawLog(array_slice($this->getRawLog(), 0, $toLevel));
+        if (0 === count($this->getRawLog())) {
             $this->clearLog();
         }
     }
@@ -185,7 +190,9 @@ class OperationLog
         }
         if (!empty($log)) {
             $log = mb_substr($log, 0, mb_strlen($log, 'utf8') - 1, 'utf8');
-            array_splice($this->log, -1, 1, end($this->log) . $logHeader . $log . PHP_EOL);
+            $logs = $this->getRawLog();
+            array_splice($logs, -1, 1, end($logs) . $logHeader . $log . PHP_EOL);
+            $this->setRawLog($logs);
         }
     }
 
@@ -197,5 +204,24 @@ class OperationLog
     public function getTableModelMapping(): array
     {
         return $this->tableModelMapping;
+    }
+
+    private function getRawLog()
+    {
+        if (extension_loaded('swoole') && class_exists(Context::class)) {
+            return Context::get(self::CONTEXT_LOG, ['']);
+        }
+
+        return $this->log;
+    }
+
+    private function setRawLog(array $log): void
+    {
+        if (extension_loaded('swoole') && class_exists(Context::class)) {
+            Context::set(self::CONTEXT_LOG, $log);
+
+            return;
+        }
+        $this->log = $log;
     }
 }
