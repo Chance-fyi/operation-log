@@ -16,9 +16,9 @@ class DbModel extends Model
 
     private Query $query;
 
-    public function __construct(string $name, array $data = [])
+    public function __construct(string $table, array $data = [])
     {
-        $this->name = $name;
+        $this->table = $table;
         parent::__construct($data);
     }
 

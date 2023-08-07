@@ -114,13 +114,13 @@ class Query extends \think\db\Query
             }
         }
 
-        $name = $this->getName();
+        $name = ltrim(Str::lower($table), Str::lower($this->prefix));
         $modelNamespace = $this->getConfig('modelNamespace') ?: 'app\\model';
         $className = trim($modelNamespace, '\\') . '\\' . Str::studly($name);
         if (class_exists($className)) {
             $model = new $className();
         } else {
-            $model = new DbModel($name);
+            $model = new DbModel($table);
             $model->table($table);
             $model->setQuery($this);
             $model->logKey = $this->getConfig('logKey') ?: $model->getPk();
