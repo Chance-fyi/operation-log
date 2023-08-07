@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static batchDeleted(Model $model, array $data)
  * @method static beginTransaction()
  * @method static rollBackTransaction(int $toLevel)
+ * @method static status()
  */
 class IlluminateOrmLog extends Facade
 {

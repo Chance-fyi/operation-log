@@ -253,4 +253,42 @@ class DbTest extends TestCase
         Manager::commit();
         assertEquals(trim($log), OperationLog::getLog());
     }
+
+    public function testStatus()
+    {
+        $data = mockData();
+        $id = Manager::table('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
+        $old = (array) Manager::table('user')->find($id);
+        $new = mockData();
+        Manager::table('user')->where('id', $id)->update($new);
+        $log .= updateLog($old, $new);
+        $old = (array) Manager::table('user')->find($id);
+        Manager::table('user')->delete($id);
+        $log .= deleteLog($old);
+
+        OperationLog::disable();
+        $data = mockData();
+        $id = Manager::table('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $new = mockData();
+        Manager::table('user')->where('id', $id)->update($new);
+        Manager::table('user')->delete($id);
+        OperationLog::enable();
+
+        $data = mockData();
+        $id = Manager::table('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log .= createLog($data);
+        $old = (array) Manager::table('user')->find($id);
+        $new = mockData();
+        Manager::table('user')->where('id', $id)->update($new);
+        $log .= updateLog($old, $new);
+        $old = (array) Manager::table('user')->find($id);
+        Manager::table('user')->delete($id);
+        $log .= deleteLog($old);
+
+        assertEquals(trim($log), OperationLog::getLog());
+    }
 }

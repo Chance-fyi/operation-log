@@ -43,13 +43,15 @@ class Builder extends \Hyperf\Database\Query\Builder
 
     public function update(array $values): int
     {
-        $oldData = $this->get()->toArray();
-        if (!empty($oldData)) {
-            $model = $this->generateModel();
-            if (count($oldData) > 1) {
-                HyperfOrmLog::batchUpdated($model, $oldData, $values);
-            } else {
-                HyperfOrmLog::updated($model, (array) $oldData[0], $values);
+        if (HyperfOrmLog::status()) {
+            $oldData = $this->get()->toArray();
+            if (!empty($oldData)) {
+                $model = $this->generateModel();
+                if (count($oldData) > 1) {
+                    HyperfOrmLog::batchUpdated($model, $oldData, $values);
+                } else {
+                    HyperfOrmLog::updated($model, (array) $oldData[0], $values);
+                }
             }
         }
 
@@ -107,33 +109,37 @@ class Builder extends \Hyperf\Database\Query\Builder
 
     private function insertLog(array $values): void
     {
-        $model = $this->generateModel();
-        if (is_array(reset($values))) {
-            HyperfOrmLog::batchCreated($model, $values);
-        } else {
-            /** @var Connection $connection */
-            $connection = $this->getConnection();
-            $id = $connection->getPdo()->lastInsertId();
-            $pk = $model->getKeyName();
-            $values[$pk] = $id;
-            HyperfOrmLog::created($model, $values);
+        if (HyperfOrmLog::status()) {
+            $model = $this->generateModel();
+            if (is_array(reset($values))) {
+                HyperfOrmLog::batchCreated($model, $values);
+            } else {
+                /** @var Connection $connection */
+                $connection = $this->getConnection();
+                $id = $connection->getPdo()->lastInsertId();
+                $pk = $model->getKeyName();
+                $values[$pk] = $id;
+                HyperfOrmLog::created($model, $values);
+            }
         }
     }
 
     private function deleteLog($id = null): void
     {
-        if (!empty($id)) {
-            $data = [(array) $this->find($id)];
-        } else {
-            $data = $this->get()->toArray();
-        }
-
-        if (!empty($data)) {
-            $model = $this->generateModel();
-            if (count($data) > 1) {
-                HyperfOrmLog::batchDeleted($model, $data);
+        if (HyperfOrmLog::status()) {
+            if (!empty($id)) {
+                $data = [(array) $this->find($id)];
             } else {
-                HyperfOrmLog::deleted($model, (array) $data[0]);
+                $data = $this->get()->toArray();
+            }
+
+            if (!empty($data)) {
+                $model = $this->generateModel();
+                if (count($data) > 1) {
+                    HyperfOrmLog::batchDeleted($model, $data);
+                } else {
+                    HyperfOrmLog::deleted($model, (array) $data[0]);
+                }
             }
         }
     }

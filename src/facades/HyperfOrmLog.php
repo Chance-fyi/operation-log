@@ -21,6 +21,7 @@ use Hyperf\Database\Model\Model;
  * @method static batchDeleted(Model $model, array $data)
  * @method static beginTransaction()
  * @method static rollBackTransaction(int $toLevel)
+ * @method static status()
  */
 class HyperfOrmLog extends Facade
 {
