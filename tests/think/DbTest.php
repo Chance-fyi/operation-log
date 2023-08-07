@@ -25,7 +25,7 @@ class DbTest extends TestCase
     public function testCreated()
     {
         $data = mockData();
-        Db::name('user')->save($data);
+        Db::table('tb_user')->save($data);
         array_unshift($data, 1);
         $log = createLog($data);
 
