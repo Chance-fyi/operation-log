@@ -30,6 +30,7 @@ class OperationLog
     public const DELETED = 'deleted';
     public const BATCH_DELETED = 'batch_deleted';
     private const CONTEXT_LOG = 'context_operation_log';
+    private const CONTEXT_STATUS = 'context_operation_log_status';
 
     protected array $tableComment;
 
@@ -209,16 +210,30 @@ class OperationLog
 
     public function status(): bool
     {
+        if (class_exists(WebmanContext::class)) {
+            return WebmanContext::get(self::CONTEXT_STATUS) ?? true;
+        }
+
         return $this->status;
     }
 
     public function enable(): void
     {
+        if (class_exists(WebmanContext::class)) {
+            WebmanContext::set(self::CONTEXT_STATUS, true);
+
+            return;
+        }
         $this->status = true;
     }
 
     public function disable(): void
     {
+        if (class_exists(WebmanContext::class)) {
+            WebmanContext::set(self::CONTEXT_STATUS, false);
+
+            return;
+        }
         $this->status = false;
     }
 
