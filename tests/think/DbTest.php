@@ -315,4 +315,42 @@ class DbTest extends TestCase
         Db::commit();
         assertEquals(trim($log), OperationLog::getLog());
     }
+
+    public function testStatus()
+    {
+        $data = mockData();
+        $id = Db::name('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log = createLog($data);
+        $old = Db::name('user')->find($id);
+        $new = mockData();
+        Db::name('user')->save(['id' => $id] + $new);
+        $log .= updateLog($old, $new);
+        $old = Db::name('user')->find($id);
+        Db::name('user')->delete($id);
+        $log .= deleteLog($old);
+
+        OperationLog::disable();
+        $data = mockData();
+        $id = Db::name('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $new = mockData();
+        Db::name('user')->save(['id' => $id] + $new);
+        Db::name('user')->delete($id);
+        OperationLog::enable();
+
+        $data = mockData();
+        $id = Db::name('user')->insertGetId($data);
+        array_unshift($data, $id);
+        $log .= createLog($data);
+        $old = Db::name('user')->find($id);
+        $new = mockData();
+        Db::name('user')->save(['id' => $id] + $new);
+        $log .= updateLog($old, $new);
+        $old = Db::name('user')->find($id);
+        Db::name('user')->delete($id);
+        $log .= deleteLog($old);
+
+        assertEquals(trim($log), OperationLog::getLog());
+    }
 }

@@ -43,13 +43,15 @@ class Builder extends \Illuminate\Database\Query\Builder
 
     public function update(array $values): int
     {
-        $oldData = $this->get()->toArray();
-        if (!empty($oldData)) {
-            $model = $this->generateModel();
-            if (count($oldData) > 1) {
-                IlluminateOrmLog::batchUpdated($model, $oldData, $values);
-            } else {
-                IlluminateOrmLog::updated($model, (array) $oldData[0], $values);
+        if (IlluminateOrmLog::status()) {
+            $oldData = $this->get()->toArray();
+            if (!empty($oldData)) {
+                $model = $this->generateModel();
+                if (count($oldData) > 1) {
+                    IlluminateOrmLog::batchUpdated($model, $oldData, $values);
+                } else {
+                    IlluminateOrmLog::updated($model, (array) $oldData[0], $values);
+                }
             }
         }
 
@@ -107,33 +109,37 @@ class Builder extends \Illuminate\Database\Query\Builder
 
     private function insertLog(array $values): void
     {
-        $model = $this->generateModel();
-        if (is_array(reset($values))) {
-            IlluminateOrmLog::batchCreated($model, $values);
-        } else {
-            /** @var Connection $connection */
-            $connection = $this->getConnection();
-            $id = $connection->getPdo()->lastInsertId();
-            $pk = $model->getKeyName();
-            $values[$pk] = $id;
-            IlluminateOrmLog::created($model, $values);
+        if (IlluminateOrmLog::status()) {
+            $model = $this->generateModel();
+            if (is_array(reset($values))) {
+                IlluminateOrmLog::batchCreated($model, $values);
+            } else {
+                /** @var Connection $connection */
+                $connection = $this->getConnection();
+                $id = $connection->getPdo()->lastInsertId();
+                $pk = $model->getKeyName();
+                $values[$pk] = $id;
+                IlluminateOrmLog::created($model, $values);
+            }
         }
     }
 
     private function deleteLog($id = null): void
     {
-        if (!empty($id)) {
-            $data = [(array) $this->find($id)];
-        } else {
-            $data = $this->get()->toArray();
-        }
-
-        if (!empty($data)) {
-            $model = $this->generateModel();
-            if (count($data) > 1) {
-                IlluminateOrmLog::batchDeleted($model, $data);
+        if (IlluminateOrmLog::status()) {
+            if (!empty($id)) {
+                $data = [(array) $this->find($id)];
             } else {
-                IlluminateOrmLog::deleted($model, (array) $data[0]);
+                $data = $this->get()->toArray();
+            }
+
+            if (!empty($data)) {
+                $model = $this->generateModel();
+                if (count($data) > 1) {
+                    IlluminateOrmLog::batchDeleted($model, $data);
+                } else {
+                    IlluminateOrmLog::deleted($model, (array) $data[0]);
+                }
             }
         }
     }

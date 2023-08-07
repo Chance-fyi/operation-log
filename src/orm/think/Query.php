@@ -17,17 +17,19 @@ class Query extends \think\db\Query
     {
         $result = parent::insert($data, $getLastInsID);
 
-        if ($getLastInsID) {
-            $id = $result;
-        } else {
-            $id = $this->getLastInsID();
-        }
+        if (ThinkOrmLog::status()) {
+            if ($getLastInsID) {
+                $id = $result;
+            } else {
+                $id = $this->getLastInsID();
+            }
 
-        $model = $this->generateModel();
-        $pk = $this->getPk();
-        $data = $data ?: $this->getOptions('data');
-        $data[$pk] = $id;
-        ThinkOrmLog::created($model, $data);
+            $model = $this->generateModel();
+            $pk = $this->getPk();
+            $data = $data ?: $this->getOptions('data');
+            $data[$pk] = $id;
+            ThinkOrmLog::created($model, $data);
+        }
 
         return $result;
     }
@@ -36,35 +38,39 @@ class Query extends \think\db\Query
     {
         $result = parent::insertAll($dataSet, $limit);
 
-        $model = $this->generateModel();
-        ThinkOrmLog::batchCreated($model, $dataSet);
+        if (ThinkOrmLog::status()) {
+            $model = $this->generateModel();
+            ThinkOrmLog::batchCreated($model, $dataSet);
+        }
 
         return $result;
     }
 
     public function update(array $data = []): int
     {
-        $model = $this->generateModel();
-        $newData = $data ?: $this->getOptions('data');
-        $field = array_keys($newData);
-        $field[] = $model->logKey ?? $model->getPk();
+        if (ThinkOrmLog::status()) {
+            $model = $this->generateModel();
+            $newData = $data ?: $this->getOptions('data');
+            $field = array_keys($newData);
+            $field[] = $model->logKey ?? $model->getPk();
 
-        $pk = $model->getPk();
-        if (isset($data[$pk])) {
-            // 包含主键只更新一条
-            $oldData = $this->find($data[$pk]);
-            if (!empty($oldData)) {
-                $oldData = [is_array($oldData) ? $oldData : $oldData->toArray()];
-            }
-        } else {
-            // 条件查询或许是多条
-            $oldData = $this->field($field)->select()->toArray();
-        }
-        if (!empty($oldData)) {
-            if (count($oldData) > 1) {
-                ThinkOrmLog::batchUpdated($model, $oldData, $newData);
+            $pk = $model->getPk();
+            if (isset($data[$pk])) {
+                // 包含主键只更新一条
+                $oldData = $this->find($data[$pk]);
+                if (!empty($oldData)) {
+                    $oldData = [is_array($oldData) ? $oldData : $oldData->toArray()];
+                }
             } else {
-                ThinkOrmLog::updated($model, $oldData[0], $newData);
+                // 条件查询或许是多条
+                $oldData = $this->field($field)->select()->toArray();
+            }
+            if (!empty($oldData)) {
+                if (count($oldData) > 1) {
+                    ThinkOrmLog::batchUpdated($model, $oldData, $newData);
+                } else {
+                    ThinkOrmLog::updated($model, $oldData[0], $newData);
+                }
             }
         }
 
@@ -73,19 +79,21 @@ class Query extends \think\db\Query
 
     public function delete($data = null): int
     {
-        $model = $this->generateModel();
-        if (!empty($data)) {
-            $pk = $model->getPk();
-            $delData = $this->whereIn($pk, $data)->select()->toArray();
-        } else {
-            $delData = $this->select()->toArray();
-        }
-
-        if (!empty($delData)) {
-            if (count($delData) > 1) {
-                ThinkOrmLog::batchDeleted($model, $delData);
+        if (ThinkOrmLog::status()) {
+            $model = $this->generateModel();
+            if (!empty($data)) {
+                $pk = $model->getPk();
+                $delData = $this->whereIn($pk, $data)->select()->toArray();
             } else {
-                ThinkOrmLog::deleted($model, $delData[0]);
+                $delData = $this->select()->toArray();
+            }
+
+            if (!empty($delData)) {
+                if (count($delData) > 1) {
+                    ThinkOrmLog::batchDeleted($model, $delData);
+                } else {
+                    ThinkOrmLog::deleted($model, $delData[0]);
+                }
             }
         }
 

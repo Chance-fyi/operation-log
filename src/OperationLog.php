@@ -36,6 +36,8 @@ class OperationLog
 
     protected array $tableModelMapping = [];
 
+    protected bool $status = true;
+
     public function __construct()
     {
         if (Facade::getResolvedInstance(self::class)) {
@@ -196,5 +198,20 @@ class OperationLog
     public function getTableModelMapping(): array
     {
         return $this->tableModelMapping;
+    }
+
+    public function status(): bool
+    {
+        return $this->status;
+    }
+
+    public function enable(): void
+    {
+        $this->status = true;
+    }
+
+    public function disable(): void
+    {
+        $this->status = false;
     }
 }
