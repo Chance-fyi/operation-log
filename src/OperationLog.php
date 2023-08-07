@@ -7,10 +7,11 @@
 namespace Chance\Log;
 
 use Chance\Log\facades\OperationLog as OperationLogFacade;
-use Hyperf\Context\Context;
+use Hyperf\Context\Context as HyperfContext;
 use Hyperf\Database\Model\Model as HyperfModel;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use think\Model as ThinkModel;
+use Webman\Context as WebmanContext;
 
 /**
  * @method getPk($model)
@@ -30,8 +31,8 @@ class OperationLog
     public const BATCH_UPDATED = 'batch_updated';
     public const DELETED = 'deleted';
     public const BATCH_DELETED = 'batch_deleted';
-
     private const CONTEXT_LOG = 'context_operation_log';
+
     protected array $tableComment;
 
     protected array $columnComment;
@@ -208,8 +209,12 @@ class OperationLog
 
     private function getRawLog()
     {
-        if (extension_loaded('swoole') && class_exists(Context::class)) {
-            return Context::get(self::CONTEXT_LOG, ['']);
+        if (extension_loaded('swoole') && class_exists(HyperfContext::class)) {
+            return HyperfContext::get(self::CONTEXT_LOG, ['']);
+        }
+
+        if (class_exists(WebmanContext::class)) {
+            return WebmanContext::get(self::CONTEXT_LOG) ?? [''];
         }
 
         return $this->log;
@@ -217,11 +222,18 @@ class OperationLog
 
     private function setRawLog(array $log): void
     {
-        if (extension_loaded('swoole') && class_exists(Context::class)) {
-            Context::set(self::CONTEXT_LOG, $log);
+        if (extension_loaded('swoole') && class_exists(HyperfContext::class)) {
+            HyperfContext::set(self::CONTEXT_LOG, $log);
 
             return;
         }
+
+        if (class_exists(WebmanContext::class)) {
+            WebmanContext::set(self::CONTEXT_LOG, $log);
+
+            return;
+        }
+
         $this->log = $log;
     }
 }
