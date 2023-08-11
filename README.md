@@ -223,15 +223,6 @@ class User extends BaseModel
 \Chance\Log\facades\OperationLog::clearLog();
 ```
 
-### 启用禁用
-
-```php
-# 启用 (默认)
-\Chance\Log\facades\OperationLog::enable();
-# 禁用
-\Chance\Log\facades\OperationLog::disable();
-```
-
 ### 效果图
 
 ![image](https://user-images.githubusercontent.com/37658940/215932487-9c923053-1bdb-4198-a13e-3ca7d668d65c.png)
