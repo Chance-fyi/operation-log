@@ -6,6 +6,7 @@
 
 namespace Chance\Log\Test\illuminate;
 
+use Chance\Log\facades\OperationLog;
 use Chance\Log\orm\illuminate\MySqlConnection;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
@@ -23,6 +24,11 @@ class TestCase extends BaseTestCase
         include_once __DIR__ . '/../function.php';
         self::connections();
         self::truncateTable();
+    }
+
+    public function setUp(): void
+    {
+        OperationLog::setTableModelMapping([]);
     }
 
     private static function connections(): void

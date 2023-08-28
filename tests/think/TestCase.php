@@ -6,6 +6,7 @@
 
 namespace Chance\Log\Test\think;
 
+use Chance\Log\facades\OperationLog;
 use Chance\Log\orm\think\MySqlConnection;
 use Chance\Log\orm\think\Query;
 use PHPUnit\Framework\TestCase as BaseTestCase;
@@ -25,6 +26,11 @@ class TestCase extends BaseTestCase
         self::connections();
         self::createTable();
         self::truncateTable();
+    }
+
+    public function setUp(): void
+    {
+        OperationLog::setTableModelMapping([]);
     }
 
     private static function connections(): void
