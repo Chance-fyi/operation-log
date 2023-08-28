@@ -6,6 +6,7 @@
 
 namespace Chance\Log\Test\hyperf;
 
+use Chance\Log\facades\OperationLog;
 use Chance\Log\orm\hyperf\MySqlConnection;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Database\Connection;
@@ -34,6 +35,11 @@ class TestCase extends BaseTestCase
         ApplicationContext::setContainer($container);
         self::connections();
         self::truncateTable();
+    }
+
+    public function setUp(): void
+    {
+        OperationLog::setTableModelMapping([]);
     }
 
     private static function connections(): void
