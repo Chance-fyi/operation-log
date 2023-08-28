@@ -41,6 +41,12 @@ function updateLog(array $old, array $new, $batch = false): string
     if ($batch) {
         $log = sprintf('批量修改 用户 (id:%s)：', $old['id']);
     }
+    $old = array_map(function ($value) {
+        return is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value;
+    }, $old);
+    $new = array_map(function ($value) {
+        return is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value;
+    }, $new);
     $diffKeys = diffKeys($old, $new);
     if (empty($diffKeys)) {
         return '';
@@ -70,6 +76,9 @@ function deleteLog($data, $batch = false): string
         $log = sprintf('批量删除 用户 (id:%s)：', $data['id']);
     }
     unset($data['id']);
+    $data = array_map(function ($value) {
+        return is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value;
+    }, $data);
     foreach ($data as $key => $val) {
         $log .= (columnComment[$key] ?? $key) . "：{$val}，";
     }
