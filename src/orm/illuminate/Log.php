@@ -9,6 +9,7 @@ namespace Chance\Log\orm\illuminate;
 
 use Chance\Log\OperationLog;
 use Chance\Log\OperationLogInterface;
+use Illuminate\Database\Eloquent\Casts\ArrayObject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -78,6 +79,10 @@ class Log extends OperationLog implements OperationLogInterface
         $keyText = $key . '_text';
         $value = $model->{$keyText} ?? $model->{$key};
 
+        if ($value instanceof ArrayObject) {
+            $value = $value->toArray();
+        }
+
         if (is_array($value)) {
             return json_encode($value, JSON_UNESCAPED_UNICODE);
         }
@@ -96,7 +101,11 @@ class Log extends OperationLog implements OperationLogInterface
 
         $keyText = $key . '_text';
         $attributeFun = 'get' . Str::studly(Str::lower($keyText)) . 'Attribute';
-        $value = (string) (method_exists($model, $attributeFun) ? $model->{$attributeFun}($model->getOriginal($key)) : $model->getOriginal($key));
+        $value = (method_exists($model, $attributeFun) ? $model->{$attributeFun}($model->getOriginal($key)) : $model->getOriginal($key));
+
+        if ($value instanceof ArrayObject) {
+            return json_encode($value->toArray(), JSON_UNESCAPED_UNICODE);
+        }
 
         $val = json_decode($value, true);
         if (!isset($jsonKey) || is_null($val) || !is_array($val)) {
@@ -124,6 +133,10 @@ class Log extends OperationLog implements OperationLogInterface
      */
     public function updated($model, array $oldData, array $data): void
     {
+        $data = array_map(function ($value) {
+            return is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value;
+        }, $data);
+
         $model->setRawAttributes($oldData, true);
         $model->setRawAttributes(array_merge($oldData, $data));
         $model->syncChanges();
