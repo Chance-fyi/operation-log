@@ -109,7 +109,7 @@ class Log extends OperationLog implements OperationLogInterface
 
         $val = json_decode($value, true);
         if (!isset($jsonKey) || is_null($val) || !is_array($val)) {
-            return $value;
+            return (string) $value;
         }
 
         foreach (explode('->', $jsonKey) as $k) {
