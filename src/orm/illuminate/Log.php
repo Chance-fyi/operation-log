@@ -104,7 +104,11 @@ class Log extends OperationLog implements OperationLogInterface
         $value = (method_exists($model, $attributeFun) ? $model->{$attributeFun}($model->getOriginal($key)) : $model->getOriginal($key));
 
         if ($value instanceof ArrayObject) {
-            return json_encode($value->toArray(), JSON_UNESCAPED_UNICODE);
+            $value = $value->toArray();
+        }
+
+        if (is_array($value)) {
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
         }
 
         $val = json_decode($value, true);
