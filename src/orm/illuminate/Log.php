@@ -111,7 +111,7 @@ class Log extends OperationLog implements OperationLogInterface
             return json_encode($value, JSON_UNESCAPED_UNICODE);
         }
 
-        $val = json_decode($value, true);
+        $val = json_decode((string) $value, true);
         if (!isset($jsonKey) || is_null($val) || !is_array($val)) {
             return (string) $value;
         }
