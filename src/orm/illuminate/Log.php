@@ -11,6 +11,7 @@ use Chance\Log\OperationLog;
 use Chance\Log\OperationLogInterface;
 use Illuminate\Database\Eloquent\Casts\ArrayObject;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
 
 class Log extends OperationLog implements OperationLogInterface
@@ -85,6 +86,12 @@ class Log extends OperationLog implements OperationLogInterface
 
         if (is_array($value)) {
             return json_encode($value, JSON_UNESCAPED_UNICODE);
+        }
+
+        if (is_object($value) && $value instanceof Expression) {
+            // Compatible with version 10.x
+            // @phpstan-ignore-next-line
+            return $value->getValue($model->getConnection()->getQueryGrammar());
         }
 
         return (string) $value;
