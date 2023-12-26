@@ -101,6 +101,17 @@ class TestCase extends BaseTestCase
                 )
                     comment '用户1';
             ");
+        Db::connect('default1')->query("
+                create table if not exists tb_default_database_does_not_exist
+                (
+                    id          int auto_increment
+                        primary key,
+                    name        varchar(255)       null comment '姓名',
+                    create_time datetime,
+                    update_time datetime
+                )
+                    comment '用户';
+            ");
     }
 
     private static function truncateTable(): void

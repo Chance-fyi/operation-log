@@ -14,6 +14,8 @@ class DbModel extends Model
     // The primary key name of the log record
     public string $logKey = 'id';
 
+    protected $autoWriteTimestamp = true;
+
     private Query $query;
 
     public function __construct(string $table, array $data = [])

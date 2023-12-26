@@ -11,6 +11,7 @@ use Illuminate\Database\Capsule\Manager;
 
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertTrue;
 
 /**
  * @internal
@@ -290,5 +291,15 @@ class DbTest extends TestCase
         $log .= deleteLog($old);
 
         assertEquals(trim($log), OperationLog::getLog());
+    }
+
+    public function testDefaultDatabaseDoesNotExist()
+    {
+        Manager::connection('default1')->table('default_database_does_not_exist')->insert([
+            'name' => '',
+        ]);
+        OperationLog::clearLog();
+
+        assertTrue(true);
     }
 }
